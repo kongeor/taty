@@ -25,6 +25,6 @@ public class NumberExp extends JispExp {
 
     @Override
     public String toString() {
-        return "<NumberExp: " + val + ">";
+        return "" + val;
     }
 }
