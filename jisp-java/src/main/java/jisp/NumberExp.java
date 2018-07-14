@@ -1,7 +1,5 @@
 package jisp;
 
-import java.util.Objects;
-
 public class NumberExp extends JispExp {
 
     private final int val;
@@ -10,17 +8,16 @@ public class NumberExp extends JispExp {
         this.val = val;
     }
 
+    public Object eval(Cons env) {
+        return val;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NumberExp numberExp = (NumberExp) o;
         return val == numberExp.val;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(val);
     }
 
     @Override

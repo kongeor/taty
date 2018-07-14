@@ -8,6 +8,11 @@ public class SymbExp extends JispExp {
         this.symb = symb;
     }
 
+    @Override
+    public Object eval(Cons env) {
+        return env.lookup(this);
+    }
+
     @Override 
     public boolean equals(Object o) {
         if (o == null) {
