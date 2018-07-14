@@ -4,13 +4,26 @@ public class SymbExp extends JispExp {
 
     private final String symb;
 
-
     public SymbExp(String symb) {
         this.symb = symb;
     }
 
+    @Override 
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof SymbExp)) {
+            return false;
+        }
+        return symb.equals(((SymbExp)o).symb);
+    }
+
     @Override
     public String toString() {
-        return "<SymbExp: " + symb + ">";
+        return "'" + symb;
     }
 }

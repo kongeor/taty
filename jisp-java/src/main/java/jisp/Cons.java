@@ -1,5 +1,7 @@
 package jisp;
 
+import java.util.Objects;
+
 public class Cons extends JispExp {
 
     private final JispExp car;
@@ -20,6 +22,18 @@ public class Cons extends JispExp {
 
     public JispExp cdr() {
         return cdr;
+    }
+
+    public JispExp lookup(SymbExp sym) {
+        Cons c = this;
+        while (c != null) {
+            Cons head = (Cons) c.car;
+            if (Objects.equals(head.car, sym)) {
+                return head.cdr;
+            }
+            c = (Cons) c.cdr;
+        }
+        return null;
     }
 
     public Cons reverse() {
