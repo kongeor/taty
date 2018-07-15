@@ -12,7 +12,7 @@ public class Env {
             (g, v) -> new Cons(v, g));
     }
 
-    public static JispExp lookup(SymbExp sym) {
+    public static Object lookup(SymbExp sym) {
         return globals.get().lookup(sym);
     }
 

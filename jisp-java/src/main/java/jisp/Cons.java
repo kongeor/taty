@@ -4,47 +4,47 @@ import java.util.Objects;
 
 public class Cons extends JispExp {
 
-    private final JispExp car;
-    private final JispExp cdr;
+    private final Object car;
+    private final Object cdr;
 
-    public Cons(JispExp car) {
+    public Cons(Object car) {
         this(car, null);
     }
 
-    public Cons(JispExp car, JispExp cdr) {
+    public Cons(Object car, Object cdr) {
         this.car = car;
         this.cdr = cdr;
     }
 
-    public JispExp car() {
+    public Object car() {
         return car;
     }
 
-    public JispExp cdr() {
+    public Object cdr() {
         return cdr;
     }
 
     @Override
     public Object eval(Cons env) {
-        JispExp f = car;
+        Object f = car;
         if (!(f instanceof IFn)) {
             throw new JispException("Cannot apply f: " + f);
         }
         IFn fn = (IFn)f;
         Cons args = (Cons) cdr;
-        return fn.apply(env, evalArgs(args));
+        return fn.apply(env, evalArgs(env, args));
     }
 
     private Cons evalArgs(Cons env, Cons args) {
         if (args == null) {
             return null;
         } else {
-            return new Cons(args.car.eval(env),
+            return new Cons(((JispExp)args.car).eval(env),
                 evalArgs(env, (Cons)args.cdr));
         }
     }
 
-    public JispExp lookup(SymbExp sym) {
+    public Object lookup(SymbExp sym) {
         Cons c = this;
         while (c != null) {
             Cons head = (Cons) c.car;
