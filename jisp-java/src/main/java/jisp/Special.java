@@ -99,6 +99,24 @@ public class Special {
         }
     }
 
+    public static class DefExp extends JispExp {
+
+        private final SymbExp symb;
+        private final JispExp val;
+
+        public DefExp(SymbExp symb, JispExp val) {
+            this.symb = symb;
+            this.val = val;
+        }
+
+        @Override
+        public Object eval(Env env) {
+            Object result = val.eval(env);
+            Env.bindGlobal(symb, result);
+            return result;
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
@@ -112,6 +130,8 @@ public class Special {
                 return new QuoteExp(((Cons)cons.cdr()).car());
             } else if (SymbExp.SymbExp_("do").equals(car)) {
                 return new DoExp((Cons)cons.cdr());
+            } else if (SymbExp.SymbExp_("def").equals(car)) {
+                return new DefExp((SymbExp)((Cons)cons.cdr()).car(), (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car());
             }
 
             return cons;
