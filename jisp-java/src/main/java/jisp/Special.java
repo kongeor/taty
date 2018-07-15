@@ -63,6 +63,20 @@ public class Special {
         }
     }
 
+    public static class QuoteExp extends JispExp {
+
+        private final Object body;
+
+        public QuoteExp(Object body) {
+            this.body = body;
+        }
+
+        @Override
+        public Object eval(Env env) {
+            return body;
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
@@ -72,6 +86,8 @@ public class Special {
                 return new LetExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
             } else if (SymbExp.SymbExp_("fn").equals(car)) {
                 return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
+            } else if (SymbExp.SymbExp_("quote").equals(car)) {
+                return new QuoteExp(((Cons)cons.cdr()).car());
             }
 
             return cons;
