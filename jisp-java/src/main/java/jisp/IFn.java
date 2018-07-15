@@ -2,6 +2,6 @@ package jisp;
 
 public interface IFn {
 
-    Object apply(Cons env, Cons args);
+    Object apply(Env env, Cons args);
 
 }

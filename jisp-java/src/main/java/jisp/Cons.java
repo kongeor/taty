@@ -16,6 +16,10 @@ public class Cons extends JispExp {
         this.cdr = cdr;
     }
 
+    public static Cons Cons_(Object car, Object cdr) {
+        return new Cons(car, cdr);
+    }
+
     public Object car() {
         return car;
     }
@@ -25,7 +29,7 @@ public class Cons extends JispExp {
     }
 
     @Override
-    public Object eval(Cons env) {
+    public Object eval(Env env) {
         Object f = car;
         if (!(f instanceof IFn)) {
             throw new JispException("Cannot apply f: " + f);
@@ -35,13 +39,17 @@ public class Cons extends JispExp {
         return fn.apply(env, evalArgs(env, args));
     }
 
-    private Cons evalArgs(Cons env, Cons args) {
+    private Cons evalArgs(Env env, Cons args) {
         if (args == null) {
             return null;
         } else {
             return new Cons(((JispExp)args.car).eval(env),
                 evalArgs(env, (Cons)args.cdr));
         }
+    }
+
+    public Cons bind(SymbExp sym, Object val) {
+        return Cons_(Cons_(sym, val), this);
     }
 
     public Object lookup(SymbExp sym) {
@@ -53,7 +61,7 @@ public class Cons extends JispExp {
             }
             c = (Cons) c.cdr;
         }
-        return null;
+        throw new IllegalArgumentException("Cannot find symbol " + sym + " in cons " + this);
     }
 
     public Cons reverse() {

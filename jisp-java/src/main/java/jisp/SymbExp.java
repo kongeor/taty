@@ -9,7 +9,7 @@ public class SymbExp extends JispExp {
     }
 
     @Override
-    public Object eval(Cons env) {
+    public Object eval(Env env) {
         return env.lookup(this);
     }
 
