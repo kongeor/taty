@@ -40,27 +40,25 @@ public class Special {
 
         @Override
         public Object eval(Env parentEnv) {
-            return new IFn() {
-                @Override
-                public Object apply(Env env, Cons args) {
-                    Env lambdaEnv = parentEnv;
+            return (IFn) (env, args) -> {
+                Env lambdaEnv = parentEnv;
 
-                    Cons p = params;
-                    Cons a = args;
-                    while (p != null) {
-                        lambdaEnv.bind((SymbExp) p.car(), a.car());
-                        p = (Cons) p.cdr();
-                        a = (Cons) a.cdr();
-                    }
-
-                    Cons b = body;
-                    Object result = null;
-                    while (b != null) {
-
-                    }
-
-                    return result;
+                Cons p = params;
+                Cons a = args;
+                while (p != null) {
+                    lambdaEnv = lambdaEnv.bind((SymbExp) p.car(), a.car());
+                    p = (Cons) p.cdr();
+                    a = (Cons) a.cdr();
                 }
+
+//                Cons b = body;
+//                Object result = null;
+//                while (b != null) {
+//                    result = ((JispExp) b.car()).eval(lambdaEnv);
+//                    b = (Cons) b.cdr();
+//                }
+
+                return body.eval(lambdaEnv);
             };
         }
     }
@@ -72,6 +70,8 @@ public class Special {
             Object car = cons.car();
             if (SymbExp.SymbExp_("let").equals(car)) {
                 return new LetExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
+            } else if (SymbExp.SymbExp_("fn").equals(car)) {
+                return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
             }
 
             return cons;
