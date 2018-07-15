@@ -73,7 +73,7 @@ public class Reader {
         return new SymbExp(sb.toString());
     }
 
-    public Cons readList(PushbackReader reader, char terminator) throws IOException {
+    public JispExp readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
 
         Cons exprs = null;
@@ -85,7 +85,7 @@ public class Reader {
             readWhitespace(reader);
             c = (char) reader.read();
         }
-        return exprs.reverse();
+        return Special.checkForm(exprs.reverse());
     }
 
     private void readWhitespace(PushbackReader reader) throws IOException {

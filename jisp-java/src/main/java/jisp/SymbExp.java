@@ -8,6 +8,10 @@ public class SymbExp extends JispExp {
         this.symb = symb;
     }
 
+    public static SymbExp SymbExp_(String symb) {
+        return new SymbExp(symb);
+    }
+
     @Override
     public Object eval(Env env) {
         return env.lookup(this);
