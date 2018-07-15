@@ -77,6 +77,28 @@ public class Special {
         }
     }
 
+    public static class DoExp extends JispExp {
+
+        private final Cons exprs;
+
+        public DoExp(Cons exprs) {
+            this.exprs = exprs;
+        }
+
+        @Override
+        public Object eval(Env env) {
+            Object result = null;
+
+            Cons e = exprs;
+            while (e != null) {
+                result = ((JispExp) e.car()).eval(env);
+                e = (Cons) e.cdr();
+            }
+
+            return result;
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
@@ -88,6 +110,8 @@ public class Special {
                 return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
             } else if (SymbExp.SymbExp_("quote").equals(car)) {
                 return new QuoteExp(((Cons)cons.cdr()).car());
+            } else if (SymbExp.SymbExp_("do").equals(car)) {
+                return new DoExp((Cons)cons.cdr());
             }
 
             return cons;
