@@ -117,6 +117,28 @@ public class Special {
         }
     }
 
+    public static class IfExpr extends JispExp {
+
+        private final JispExp pred;
+        private final JispExp ifExp;
+        private final JispExp elseExp;
+
+        public IfExpr(JispExp pred, JispExp ifExp, JispExp elseExp) {
+            this.pred = pred;
+            this.ifExp = ifExp;
+            this.elseExp = elseExp;
+        }
+
+        @Override
+        public Object eval(Env env) {
+            if (pred.eval(env) == Boolean.TRUE) {
+                return ifExp.eval(env);
+            } else {
+                return elseExp.eval(env);
+            }
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
@@ -132,6 +154,10 @@ public class Special {
                 return new DoExp((Cons)cons.cdr());
             } else if (SymbExp.SymbExp_("def").equals(car)) {
                 return new DefExp((SymbExp)((Cons)cons.cdr()).car(), (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car());
+            } else if (SymbExp.SymbExp_("if").equals(car)) {
+                return new IfExpr((JispExp)((Cons)cons.cdr()).car(),
+                        (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car(),
+                        (JispExp)((Cons)(((Cons)((Cons)cons.cdr()).cdr()).cdr())).car());
             }
 
             return cons;
