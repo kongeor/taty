@@ -45,4 +45,14 @@ public class Env {
     public Env bind(SymbExp sym, Object val) {
         return Env_(Cons_(Cons_(sym, val), cons));
     }
+
+    public static Env initBaseEnv() {
+        Env.bindGlobal(SymbExp.SymbExp_("true"), Boolean.TRUE);
+        Env.bindGlobal(SymbExp.SymbExp_("false"), Boolean.FALSE);
+        Env.bindGlobal(SymbExp.SymbExp_("+"), Builtin.PLUS);
+        Env.bindGlobal(SymbExp.SymbExp_("-"), Builtin.MINUS);
+        Env.bindGlobal(SymbExp.SymbExp_("nil"), null);
+        Env.bindGlobal(SymbExp.SymbExp_("<"), Builtin.LT);
+        return Env_();
+    }
 }

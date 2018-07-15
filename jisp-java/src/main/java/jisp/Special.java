@@ -1,13 +1,15 @@
 package jisp;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Special {
 
     public static class LetExp extends JispExp {
 
         private final Cons binds;
-        private final Cons body;
+        private final JispExp body;
 
-        public LetExp(Cons binds, Cons body) {
+        public LetExp(Cons binds, JispExp body) {
             this.binds = binds;
             this.body = body;
         }
@@ -30,26 +32,32 @@ public class Special {
 
     public static class FnExp extends JispExp {
 
-        private final Cons params;
-        private final Cons body;
+        private static final AtomicLong ids = new AtomicLong(1);
 
-        public FnExp(Cons params, Cons body) {
+        private final Cons params;
+        private final JispExp body;
+        private final long id;
+
+        public FnExp(Cons params, JispExp body) {
             this.params = params;
             this.body = body;
+            this.id = ids.getAndIncrement();
         }
 
         @Override
         public Object eval(Env parentEnv) {
-            return (IFn) (env, args) -> {
-                Env lambdaEnv = parentEnv;
+            return new IFn() {
+                @Override
+                public Object apply(Env env, Cons args) {
+                    Env lambdaEnv = parentEnv;
 
-                Cons p = params;
-                Cons a = args;
-                while (p != null) {
-                    lambdaEnv = lambdaEnv.bind((SymbExp) p.car(), a.car());
-                    p = (Cons) p.cdr();
-                    a = (Cons) a.cdr();
-                }
+                    Cons p = params;
+                    Cons a = args;
+                    while (p != null) {
+                        lambdaEnv = lambdaEnv.bind((SymbExp) p.car(), a.car());
+                        p = (Cons) p.cdr();
+                        a = (Cons) a.cdr();
+                    }
 
 //                Cons b = body;
 //                Object result = null;
@@ -58,9 +66,16 @@ public class Special {
 //                    b = (Cons) b.cdr();
 //                }
 
-                return body.eval(lambdaEnv);
+                    return body.eval(lambdaEnv);
+                }
+
+                @Override
+                public String toString() {
+                    return "<Lambda:" + id + ">";
+                }
             };
         }
+
     }
 
     public static class QuoteExp extends JispExp {
@@ -145,9 +160,9 @@ public class Special {
         } else {
             Object car = cons.car();
             if (SymbExp.SymbExp_("let").equals(car)) {
-                return new LetExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
+                return new LetExp((Cons)((Cons)cons.cdr()).car(), (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car());
             } else if (SymbExp.SymbExp_("fn").equals(car)) {
-                return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)((Cons)cons.cdr()).cdr()).car());
+                return new FnExp((Cons)((Cons)cons.cdr()).car(), (JispExp) ((Cons)((Cons)cons.cdr()).cdr()).car());
             } else if (SymbExp.SymbExp_("quote").equals(car)) {
                 return new QuoteExp(((Cons)cons.cdr()).car());
             } else if (SymbExp.SymbExp_("do").equals(car)) {
