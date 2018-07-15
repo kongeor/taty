@@ -28,6 +28,43 @@ public class Special {
         }
     }
 
+    public static class FnExp extends JispExp {
+
+        private final Cons params;
+        private final Cons body;
+
+        public FnExp(Cons params, Cons body) {
+            this.params = params;
+            this.body = body;
+        }
+
+        @Override
+        public Object eval(Env parentEnv) {
+            return new IFn() {
+                @Override
+                public Object apply(Env env, Cons args) {
+                    Env lambdaEnv = parentEnv;
+
+                    Cons p = params;
+                    Cons a = args;
+                    while (p != null) {
+                        lambdaEnv.bind((SymbExp) p.car(), a.car());
+                        p = (Cons) p.cdr();
+                        a = (Cons) a.cdr();
+                    }
+
+                    Cons b = body;
+                    Object result = null;
+                    while (b != null) {
+
+                    }
+
+                    return result;
+                }
+            };
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
