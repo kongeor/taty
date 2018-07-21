@@ -41,7 +41,7 @@ public class Cons extends JispExp {
 //        IFn fn = (IFn)f;
 //        Cons args = (Cons) cdr;
         Cons e = evalArgs(env, this);
-        return ((IFn)e.car).apply(env, (Cons) e.cdr());
+        return ((IFn)e.car).apply(env, (Cons) e.cdr);
     }
 
     private Cons evalArgs(Env env, Cons args) {
@@ -66,7 +66,7 @@ public class Cons extends JispExp {
             }
             c = (Cons) c.cdr;
         }
-        throw new IllegalArgumentException("Cannot find symbol " + sym + " in cons " + this);
+        throw new IllegalArgumentException("Cannot find symbol " + sym + " in env " + this);
     }
 
     public Cons reverse() {

@@ -10,20 +10,24 @@ public class Reader {
 
     private static final String ALPHANUMS = "1234567890abcdefghijklmnopqrstuvwxyz_!-+*/<>=?";
 
-    public Cons read(String source) throws IOException {
+    public Cons read(String source) {
         PushbackReader reader = new PushbackReader(new StringReader(source));
 
         Cons exprs = null;
 
-        char c = (char) reader.read();
+        try {
+            char c = (char) reader.read();
 
-        while(c != '\uFFFF') {
-            reader.unread(c);
-            exprs = new Cons(readExpr(reader), exprs);
-            c = (char) reader.read();
+            while (c != '\uFFFF') {
+                reader.unread(c);
+                exprs = new Cons(readExpr(reader), exprs);
+                c = (char) reader.read();
+            }
+
+            return exprs.reverse();
+        } catch (IOException e) {
+            throw new JispException("Cannot read source", e);
         }
-
-        return exprs.reverse();
     }
 
     private JispExp readExpr(PushbackReader reader) throws IOException {
@@ -92,7 +96,11 @@ public class Reader {
             readWhitespace(reader);
             c = (char) reader.read();
         }
-        return Special.checkForm(exprs.reverse());
+        if (exprs != null) {
+            return Special.checkForm(exprs.reverse());
+        } else {
+            return null;
+        }
     }
 
     private void readWhitespace(PushbackReader reader) throws IOException {

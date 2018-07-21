@@ -1,10 +1,7 @@
 package jisp;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static jisp.Cons.Cons_;
 import static jisp.NumberExp.NumberExp_;
@@ -20,23 +17,23 @@ public class JispTest {
         env = Env.initBaseEnv();
     }
 
-    private JispExp readFirst(String source) throws IOException {
+    private JispExp readFirst(String source) {
         return (JispExp) reader.read(source).car();
     }
 
     @Test
-    public void num() throws IOException {
+    public void num() {
         assertEquals(5, readFirst("5").eval(env));
     }
 
     @Test
-    public void def_sym() throws IOException {
+    public void def_sym() {
         assertEquals(1, readFirst("(def a 1)").eval(env));
         assertEquals(1, readFirst("a").eval(env));
     }
 
     @Test
-    public void let() throws IOException {
+    public void let() {
         assertEquals(1, readFirst("(let [a 1] a)").eval(env));
         try {
             assertEquals(1, readFirst("a").eval(env));
@@ -47,12 +44,22 @@ public class JispTest {
     }
 
     @Test
-    public void fn() throws IOException {
+    public void let_mult_exp() {
+        assertEquals(2, readFirst("(let [] 1 2)").eval(env));
+    }
+
+    @Test
+    public void fn() {
         assertEquals(3, readFirst("((fn [a b] (+ a b)) 1 2)").eval(env));
     }
 
     @Test
-    public void quote_cons() throws IOException {
+    public void fn_mult_expr() {
+        assertEquals(2, readFirst("((fn [] 1 2))").eval(env));
+    }
+
+    @Test
+    public void quote_cons() {
         assertEquals(Cons_(NumberExp_(1),
                 Cons_(NumberExp_(2),
                         Cons_(NumberExp_(3)))),
@@ -60,7 +67,7 @@ public class JispTest {
     }
 
     @Test
-    public void do_exp() throws IOException {
+    public void do_exp() {
         assertEquals(3, readFirst("(do (def a 3) a").eval(env));
     }
 }

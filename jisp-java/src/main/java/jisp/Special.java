@@ -7,9 +7,9 @@ public class Special {
     public static class LetExp extends JispExp {
 
         private final Cons binds;
-        private final JispExp body;
+        private final Cons body;
 
-        public LetExp(Cons binds, JispExp body) {
+        public LetExp(Cons binds, Cons body) {
             this.binds = binds;
             this.body = body;
         }
@@ -26,7 +26,14 @@ public class Special {
                 b = (Cons) ((Cons) b.cdr()).cdr();
             }
 
-            return body.eval(env);
+            Cons bd = body;
+            Object result = null;
+            while (bd != null) {
+                result = ((JispExp) bd.car()).eval(env);
+                bd = (Cons) bd.cdr();
+            }
+
+            return result;
         }
     }
 
@@ -35,10 +42,10 @@ public class Special {
         private static final AtomicLong ids = new AtomicLong(1);
 
         private final Cons params;
-        private final JispExp body;
+        private final Cons body;
         private final long id;
 
-        public FnExp(Cons params, JispExp body) {
+        public FnExp(Cons params, Cons body) {
             this.params = params;
             this.body = body;
             this.id = ids.getAndIncrement();
@@ -65,14 +72,14 @@ public class Special {
                         }
                     }
 
-//                Cons b = body;
-//                Object result = null;
-//                while (b != null) {
-//                    result = ((JispExp) b.car()).eval(lambdaEnv);
-//                    b = (Cons) b.cdr();
-//                }
+                    Cons b = body;
+                    Object result = null;
+                    while (b != null) {
+                        result = ((JispExp) b.car()).eval(lambdaEnv);
+                        b = (Cons) b.cdr();
+                    }
 
-                    return body.eval(lambdaEnv);
+                    return result;
                 }
 
                 @Override
@@ -166,9 +173,9 @@ public class Special {
         } else {
             Object car = cons.car();
             if (SymbExp.SymbExp_("let").equals(car)) {
-                return new LetExp((Cons)((Cons)cons.cdr()).car(), (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car());
+                return new LetExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
             } else if (SymbExp.SymbExp_("fn").equals(car)) {
-                return new FnExp((Cons)((Cons)cons.cdr()).car(), (JispExp) ((Cons)((Cons)cons.cdr()).cdr()).car());
+                return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
             } else if (SymbExp.SymbExp_("quote").equals(car)) {
                 return new QuoteExp(((Cons)cons.cdr()).car());
             } else if (SymbExp.SymbExp_("do").equals(car)) {

@@ -14,6 +14,10 @@ public class Env {
         globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
     }
 
+    public static void resetGlobalEnv() {
+        globals.updateAndGet(env -> null);
+    }
+
     public static Object lookupGlobal(SymbExp sym) {
         return globals.get().lookup(sym);
     }
@@ -47,6 +51,7 @@ public class Env {
     }
 
     public static Env initBaseEnv() {
+        Env.resetGlobalEnv();
         Env.bindGlobal(SymbExp.SymbExp_("true"), Boolean.TRUE);
         Env.bindGlobal(SymbExp.SymbExp_("false"), Boolean.FALSE);
         Env.bindGlobal(SymbExp.SymbExp_("+"), Builtin.PLUS);
