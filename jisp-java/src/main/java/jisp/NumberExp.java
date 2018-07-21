@@ -8,6 +8,10 @@ public class NumberExp extends JispExp {
         this.val = val;
     }
 
+    public static NumberExp NumberExp_(int val) {
+        return new NumberExp(val);
+    }
+
     @Override
     public Object eval(Env env) {
         return val;

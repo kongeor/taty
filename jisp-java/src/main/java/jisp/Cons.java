@@ -16,6 +16,10 @@ public class Cons extends JispExp {
         this.cdr = cdr;
     }
 
+    public static Cons Cons_(Object car) {
+        return new Cons(car, null);
+    }
+
     public static Cons Cons_(Object car, Object cdr) {
         return new Cons(car, cdr);
     }
@@ -81,6 +85,18 @@ public class Cons extends JispExp {
             }
             return rev;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        return Objects.equals(car, ((Cons)obj).car)
+                && Objects.equals(cdr, ((Cons)obj).cdr);
     }
 
     @Override
