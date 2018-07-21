@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
+import static jisp.StringExp.StringExp_;
 import static jisp.SymbExp.SymbExp_;
 
 public class Reader {
@@ -39,7 +40,7 @@ public class Reader {
             return readNumber(reader);
         }
 
-        if ("&".equals("" + c)) {
+        if (c == '&') {
             readWhitespace(reader);
             return readSymbol(reader, true);
         }
@@ -47,6 +48,10 @@ public class Reader {
         if (ALPHANUMS.contains("" + c)) {
             reader.unread(c);
             return readSymbol(reader, false);
+        }
+
+        if (c == '"') {
+            return readString(reader);
         }
 
         if (c == '(') {
@@ -83,6 +88,18 @@ public class Reader {
         reader.unread(c);
         return SymbExp_(sb.toString(), isRest);
     }
+
+    private JispExp readString(PushbackReader reader) throws IOException {
+        StringBuilder sb = new StringBuilder();
+
+        char c = (char) reader.read();
+        while (c != '"') {
+            sb.append(c);
+            c = (char) reader.read();
+        }
+        return StringExp_(sb.toString());
+    }
+
 
     public JispExp readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
