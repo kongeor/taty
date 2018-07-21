@@ -25,6 +25,9 @@ public class Reader {
                 c = (char) reader.read();
             }
 
+            if (exprs == null) {
+                return null;
+            }
             return exprs.reverse();
         } catch (IOException e) {
             throw new JispException("Cannot read source", e);

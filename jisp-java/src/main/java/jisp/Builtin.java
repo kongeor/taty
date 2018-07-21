@@ -24,7 +24,21 @@ public abstract class Builtin implements IFn {
             int sum = 0;
             Cons c = args;
             while (c != null) {
-                sum += (Integer) c.car();
+                sum = Math.addExact(sum, (Integer) c.car());
+                c = (Cons) c.cdr();
+            }
+            return sum;
+        }
+    };
+
+    public static Builtin MULT = new Builtin("*") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            int sum = 1;
+            Cons c = args;
+            while (c != null) {
+                sum = Math.multiplyExact(sum, (Integer) c.car());
                 c = (Cons) c.cdr();
             }
             return sum;

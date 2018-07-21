@@ -25,11 +25,14 @@ public class Main {
                 Cons read = reader.read(data);
 
                 Object result = null;
-                JispExp exp = (JispExp) read.car();
 
-                while (exp != null) {
-                    result = exp.eval(env);
-                    exp = (JispExp) read.cdr();
+                if (read != null) {
+                    JispExp exp = (JispExp) read.car();
+
+                    while (exp != null) {
+                        result = exp.eval(env);
+                        exp = (JispExp) read.cdr();
+                    }
                 }
 
                 System.out.println(result);

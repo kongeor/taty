@@ -1,6 +1,5 @@
 package jisp;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static jisp.Cons.Cons_;
@@ -59,11 +58,31 @@ public class Env {
         Env.resetGlobalEnv();
         Env.bindGlobal("true", Boolean.TRUE);
         Env.bindGlobal("false", Boolean.FALSE);
-        Env.bindGlobal("+", Builtin.PLUS);
-        Env.bindGlobal("-", Builtin.MINUS);
         Env.bindGlobal("nil", null);
-        Env.bindGlobal("<", Builtin.LT);
+
         Env.bindGlobal("println", Builtin.PRINTLN);
+        Env.bindGlobal("+", Builtin.PLUS);
+        Env.bindGlobal("*", Builtin.MULT);
+        Env.bindGlobal("-", Builtin.MINUS);
+        Env.bindGlobal("/", null); // TODO
+        Env.bindGlobal("<", Builtin.LT);
+        Env.bindGlobal(">", null); // TODO
+        Env.bindGlobal("<=", null); // TODO
+        Env.bindGlobal(">=", null); // TODO
+        Env.bindGlobal("=", null); // TODO
+        Env.bindGlobal("dec", null); // TODO
+        Env.bindGlobal("inc", null); // TODO
+        Env.bindGlobal("car", null); // TODO
+        Env.bindGlobal("cdr", null); // TODO
+        Env.bindGlobal("cons", null); // TODO
+        Env.bindGlobal("cons?", null); // TODO
+        Env.bindGlobal("symbol?", null); // TODO
+        Env.bindGlobal("apply", null); // TODO
+        Env.bindGlobal("load-file", null); // TODO
+        Env.bindGlobal("nil?", null); // TODO
+        Env.bindGlobal("vararg", null); // TODO
+        Env.bindGlobal("read-file", null); // TODO
+        Env.bindGlobal("die", null); // TODO
         return Env_();
     }
 }
