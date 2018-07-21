@@ -8,6 +8,10 @@ public abstract class Builtin implements IFn {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "<BuiltinFn:" + name + ">";
@@ -44,6 +48,21 @@ public abstract class Builtin implements IFn {
             int left = (int) args.car();
             int right = (int) ((Cons)args.cdr()).car();
             return left < right;
+        }
+    };
+
+    public static Builtin PRINTLN = new Builtin("println") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            StringBuilder sb = new StringBuilder();
+            Cons a = args;
+            while (a != null) {
+                sb.append(a.car());
+                a = (Cons) a.cdr();
+            }
+            System.out.println(sb.toString());
+            return null;
         }
     };
 }

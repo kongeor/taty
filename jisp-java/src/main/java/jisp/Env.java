@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static jisp.Cons.Cons_;
+import static jisp.SymbExp.SymbExp_;
 
 public class Env {
     
@@ -12,6 +13,10 @@ public class Env {
 
     public static void bindGlobal(SymbExp sym, Object val) {
         globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
+    }
+
+    public static void bindGlobal(String sym, Object val) {
+        globals.updateAndGet(env -> Cons_(Cons_(SymbExp_(sym), val), env));
     }
 
     public static void resetGlobalEnv() {
@@ -52,12 +57,13 @@ public class Env {
 
     public static Env initBaseEnv() {
         Env.resetGlobalEnv();
-        Env.bindGlobal(SymbExp.SymbExp_("true"), Boolean.TRUE);
-        Env.bindGlobal(SymbExp.SymbExp_("false"), Boolean.FALSE);
-        Env.bindGlobal(SymbExp.SymbExp_("+"), Builtin.PLUS);
-        Env.bindGlobal(SymbExp.SymbExp_("-"), Builtin.MINUS);
-        Env.bindGlobal(SymbExp.SymbExp_("nil"), null);
-        Env.bindGlobal(SymbExp.SymbExp_("<"), Builtin.LT);
+        Env.bindGlobal("true", Boolean.TRUE);
+        Env.bindGlobal("false", Boolean.FALSE);
+        Env.bindGlobal("+", Builtin.PLUS);
+        Env.bindGlobal("-", Builtin.MINUS);
+        Env.bindGlobal("nil", null);
+        Env.bindGlobal("<", Builtin.LT);
+        Env.bindGlobal("println", Builtin.PRINTLN);
         return Env_();
     }
 }
