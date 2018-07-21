@@ -54,9 +54,15 @@ public class Special {
                     Cons p = params;
                     Cons a = args;
                     while (p != null) {
-                        lambdaEnv = lambdaEnv.bind((SymbExp) p.car(), a.car());
-                        p = (Cons) p.cdr();
-                        a = (Cons) a.cdr();
+                        SymbExp sym = (SymbExp) p.car();
+                        if (sym.isRest()) {
+                            lambdaEnv = lambdaEnv.bind(sym, a);
+                            break;
+                        } else {
+                            lambdaEnv = lambdaEnv.bind(sym, a.car());
+                            p = (Cons) p.cdr();
+                            a = (Cons) a.cdr();
+                        }
                     }
 
 //                Cons b = body;

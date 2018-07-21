@@ -3,13 +3,23 @@ package jisp;
 public class SymbExp extends JispExp {
 
     private final String symb;
+    private final boolean isRest;
 
-    public SymbExp(String symb) {
+    private SymbExp(String symb, boolean isRest) {
         this.symb = symb;
+        this.isRest = isRest;
     }
 
     public static SymbExp SymbExp_(String symb) {
-        return new SymbExp(symb);
+        return new SymbExp(symb, false);
+    }
+
+    public static SymbExp SymbExp_(String symb, boolean isRest) {
+        return new SymbExp(symb, isRest);
+    }
+
+    public boolean isRest() {
+        return isRest;
     }
 
     @Override
