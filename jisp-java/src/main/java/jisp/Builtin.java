@@ -1,5 +1,9 @@
 package jisp;
 
+import java.util.Objects;
+
+import static jisp.Cons.Cons_;
+
 public abstract class Builtin implements IFn {
 
     private final String name;
@@ -16,6 +20,21 @@ public abstract class Builtin implements IFn {
     public String toString() {
         return "<BuiltinFn:" + name + ">";
     }
+
+    public static Builtin PRINTLN = new Builtin("println") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            StringBuilder sb = new StringBuilder();
+            Cons a = args;
+            while (a != null) {
+                sb.append(a.car());
+                a = (Cons) a.cdr();
+            }
+            System.out.println(sb.toString());
+            return null;
+        }
+    };
 
     public static Builtin PLUS = new Builtin("+") {
 
@@ -65,18 +84,35 @@ public abstract class Builtin implements IFn {
         }
     };
 
-    public static Builtin PRINTLN = new Builtin("println") {
+    public static Builtin EQ = new Builtin("=") {
 
         @Override
         public Object apply(Env env, Cons args) {
-            StringBuilder sb = new StringBuilder();
-            Cons a = args;
-            while (a != null) {
-                sb.append(a.car());
-                a = (Cons) a.cdr();
+            Object left = args.car();
+            Object right = ((Cons)args.cdr()).car();
+            return Objects.equals(left, right);
+        }
+    };
+
+    public static Builtin CONS = new Builtin("cons") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            Object left = args.car();
+            Object right = null;
+            if (args.cdr() != null) {
+                right = ((Cons) args.cdr()).car();
             }
-            System.out.println(sb.toString());
-            return null;
+            return Cons_(left, right);
+        }
+    };
+
+    public static Builtin CONS_Q = new Builtin("cons?") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            Object param = args.car();
+            return param instanceof Cons;
         }
     };
 }

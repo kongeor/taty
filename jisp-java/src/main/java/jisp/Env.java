@@ -69,13 +69,13 @@ public class Env {
         Env.bindGlobal(">", null); // TODO
         Env.bindGlobal("<=", null); // TODO
         Env.bindGlobal(">=", null); // TODO
-        Env.bindGlobal("=", null); // TODO
+        Env.bindGlobal("=", Builtin.EQ);
         Env.bindGlobal("dec", null); // TODO
         Env.bindGlobal("inc", null); // TODO
         Env.bindGlobal("car", null); // TODO
         Env.bindGlobal("cdr", null); // TODO
-        Env.bindGlobal("cons", null); // TODO
-        Env.bindGlobal("cons?", null); // TODO
+        Env.bindGlobal("cons", Builtin.CONS);
+        Env.bindGlobal("cons?", Builtin.CONS_Q);
         Env.bindGlobal("symbol?", null); // TODO
         Env.bindGlobal("apply", null); // TODO
         Env.bindGlobal("load-file", null); // TODO
