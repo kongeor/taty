@@ -34,14 +34,13 @@ public class Cons extends JispExp {
 
     @Override
     public Object eval(Env env) {
-//        Object f = car;
-//        if (!(f instanceof IFn)) {
-//            throw new JispException("Cannot apply f: " + f);
-//        }
-//        IFn fn = (IFn)f;
-//        Cons args = (Cons) cdr;
-        Cons e = evalArgs(env, this);
-        return ((IFn)e.car).apply(env, (Cons) e.cdr);
+        Cons evalArgs = evalArgs(env, this);
+        if (!(evalArgs.car instanceof IFn)) {
+            throw new JispException("Cannot apply f: " + evalArgs.car);
+        }
+        IFn fn = (IFn) evalArgs.car;
+        Cons args = (Cons) cdr;
+        return fn.apply(env, args);
     }
 
     private Cons evalArgs(Env env, Cons args) {

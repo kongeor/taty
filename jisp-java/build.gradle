@@ -17,3 +17,9 @@ test {
     // testLogging.outputs.upToDateWhen {false}
     testLogging.showStandardStreams = true
 }
+
+jar {
+    manifest {
+        attributes "Main-Class": "jisp.Main"
+    }
+}
