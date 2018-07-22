@@ -39,7 +39,7 @@ public class Cons extends JispExp {
             throw new JispException("Cannot apply f: " + evalArgs.car);
         }
         IFn fn = (IFn) evalArgs.car;
-        Cons args = (Cons) cdr;
+        Cons args = (Cons) evalArgs.cdr;
         return fn.apply(env, args);
     }
 
