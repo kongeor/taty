@@ -11,7 +11,7 @@ public class ConsTest {
     @Test
     public void one_element() throws IOException {
         Cons cons = new Cons(new NumberExp(1), null);
-        assertEquals("(1)", cons.toString());
+        assertEquals("(2)", cons.toString());
     }
 
     @Test
