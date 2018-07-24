@@ -5,13 +5,31 @@ jobs:
     working_directory: ~/jisp
 
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/openjdk:8-jdk
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
     steps:
 
       - checkout
 
-      - run: ./gradlew test
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: gradle test
 
       - store_test_results:
           path: target/surefire-reports
