@@ -167,6 +167,30 @@ public class Special {
         }
     }
 
+    public static class CondExp extends JispExp {
+
+        private final Cons clauses;
+
+        public CondExp(Cons clauses) {
+            this.clauses = clauses;
+        }
+
+        @Override
+        public Object eval(Env env) {
+            // TODO check pairs
+            Cons pair = clauses;
+
+            while(pair != null && pair.car() != null && ((Cons)pair.cdr()).car() != null) {
+                if (((JispExp)pair.car()).eval(env) == Boolean.TRUE) {
+                    return ((JispExp)((Cons)pair.cdr()).car()).eval(env);
+                }
+                pair = (Cons)((Cons)pair.cdr()).cdr();
+            }
+
+            throw new JispException("All clauses failed in cond. Consider adding a final true clause");
+        }
+    }
+
     public static JispExp checkForm(Cons cons) {
         if (cons == null) {
             return null;
@@ -186,6 +210,8 @@ public class Special {
                 return new IfExpr((JispExp)((Cons)cons.cdr()).car(),
                         (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car(),
                         (JispExp)((Cons)(((Cons)((Cons)cons.cdr()).cdr()).cdr())).car());
+            } else if (SymbExp.SymbExp_("cond").equals(car)) {
+                return new CondExp((Cons) cons.cdr());
             }
 
             return cons;

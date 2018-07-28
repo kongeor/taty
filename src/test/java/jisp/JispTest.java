@@ -81,4 +81,19 @@ public class JispTest {
         assertEquals(3, readFirst("(do (def a 3) a").eval(env));
     }
 
+    @Test
+    public void code_exp() {
+        assertEquals(3, readFirst("(cond (= 1 1) 3").eval(env));
+    }
+
+    @Test
+    public void code_exp_second_clause() {
+        assertEquals(2, readFirst("(cond (= 1 2) 3 true 2").eval(env));
+    }
+
+    @Test(expected = JispException.class)
+    public void code_exp_no_clause() {
+        assertEquals(null, readFirst("(cond (= 1 2) 3 false 2").eval(env));
+    }
+
 }
