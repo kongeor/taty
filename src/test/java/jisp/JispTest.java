@@ -117,4 +117,24 @@ public class JispTest {
     public void load_file() {
         assertEquals(120, readFirst("(do (load-file \"src/test/resources/fact.jisp\") (fact 5))").eval(env));
     }
+
+    @Test
+    public void nil_is_false() {
+        assertEquals(2, readFirst("(if nil 1 2)").eval(env));
+    }
+
+    @Test
+    public void false_is_false() {
+        assertEquals(2, readFirst("(if false 1 2)").eval(env));
+    }
+
+    @Test
+    public void nums_are_true() {
+        assertEquals(1, readFirst("(if 5 1 2)").eval(env));
+    }
+
+    @Test
+    public void funcs_are_true() {
+        assertEquals(1, readFirst("(if (fn []) 1 2)").eval(env));
+    }
 }

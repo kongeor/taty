@@ -159,7 +159,8 @@ public class Special {
 
         @Override
         public Object eval(Env env) {
-            if (pred.eval(env) == Boolean.TRUE) {
+            Object res = pred.eval(env);
+            if (Bool.isTruthy(res)) {
                 return ifExp.eval(env);
             } else {
                 return elseExp.eval(env);
@@ -181,7 +182,8 @@ public class Special {
             Cons pair = clauses;
 
             while(pair != null && pair.car() != null && ((Cons)pair.cdr()).car() != null) {
-                if (((JispExp)pair.car()).eval(env) == Boolean.TRUE) {
+                Object res = ((JispExp) pair.car()).eval(env);
+                if (Bool.isTruthy(res)) {
                     return ((JispExp)((Cons)pair.cdr()).car()).eval(env);
                 }
                 pair = (Cons)((Cons)pair.cdr()).cdr();
