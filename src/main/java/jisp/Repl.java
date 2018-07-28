@@ -4,7 +4,13 @@ import java.util.Scanner;
 
 public class Repl {
 
+    private void printWelcome() {
+        System.out.println("Welcome to Jisp!");
+    }
+
     public void start() {
+
+        printWelcome();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -19,7 +25,7 @@ public class Repl {
         while (true) {
             try {
                 if (parenDiff == 0) {
-                    System.out.print("-> ");
+                    System.out.print("(\\)=> ");
                 } else {
                     System.out.print(parenDiff + ") ");
                 }
