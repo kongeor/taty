@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static jisp.Cons.Cons_;
 import static jisp.NumberExp.NumberExp_;
+import static jisp.SymbExp.SymbExp_;
 import static org.junit.Assert.assertEquals;
 
 public class JispTest {
@@ -60,14 +61,24 @@ public class JispTest {
 
     @Test
     public void quote_cons() {
-        assertEquals(Cons_(NumberExp_(1),
-                Cons_(NumberExp_(2),
-                        Cons_(NumberExp_(3)))),
+        assertEquals(Cons_(NumberExp_(1), Cons_(NumberExp_(2), Cons_(NumberExp_(3)))),
                 readFirst("(quote (1 2 3))").eval(env));
+    }
+
+    @Test
+    public void quote_cons_short() {
+        assertEquals(Cons_(NumberExp_(1), Cons_(NumberExp_(2), Cons_(NumberExp_(3)))),
+                readFirst("'(1 2 3)").eval(env));
+    }
+
+    @Test
+    public void quote() {
+        assertEquals(SymbExp_("a"), readFirst("'a").eval(env));
     }
 
     @Test
     public void do_exp() {
         assertEquals(3, readFirst("(do (def a 3) a").eval(env));
     }
+
 }

@@ -53,6 +53,10 @@ public class Reader {
             return readSymbol(reader, false);
         }
 
+        if (c == '\'') {
+            return new Special.QuoteExp(readExpr(reader));
+        }
+
         if (c == '"') {
             return readString(reader);
         }
