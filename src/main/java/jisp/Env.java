@@ -78,10 +78,10 @@ public class Env {
         Env.bindGlobal("cons?", Builtin.CONS_Q);
         Env.bindGlobal("symbol?", null); // TODO
         Env.bindGlobal("apply", null); // TODO
-        Env.bindGlobal("load-file", null); // TODO
         Env.bindGlobal("nil?", null); // TODO
         Env.bindGlobal("vararg", null); // TODO
-        Env.bindGlobal("read-file", null); // TODO
+        Env.bindGlobal("read-file", Builtin.READ_FILE);
+        Env.bindGlobal("load-file", Builtin.LOAD_FILE);
         Env.bindGlobal("die", null); // TODO
         return Env_();
     }

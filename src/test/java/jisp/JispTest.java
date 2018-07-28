@@ -96,4 +96,13 @@ public class JispTest {
         assertEquals(null, readFirst("(cond (= 1 2) 3 false 2").eval(env));
     }
 
+    @Test
+    public void read_file() {
+        assertEquals(String.class, readFirst("(read-file \"src/test/resources/fact.jisp\")").eval(env).getClass());
+    }
+
+    @Test
+    public void load_file() {
+        assertEquals(120, readFirst("(do (load-file \"src/test/resources/fact.jisp\") (fact 5))").eval(env));
+    }
 }

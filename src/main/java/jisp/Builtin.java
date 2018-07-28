@@ -1,5 +1,10 @@
 package jisp;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static jisp.Cons.Cons_;
@@ -113,6 +118,32 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             Object param = args.car();
             return param instanceof Cons;
+        }
+    };
+
+    public static Builtin READ_FILE = new Builtin("read-file") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            Object param = args.car();
+            Path file = Paths.get("" + param);
+            try {
+                byte[] bytes = Files.readAllBytes(file);
+                return new String(bytes, Charset.defaultCharset());
+            } catch (IOException e) {
+                throw new JispException("Cannot read file: " + file.toUri(), e);
+            }
+        }
+    };
+
+    public static Builtin LOAD_FILE = new Builtin("load-file") {
+
+        @Override
+        public Object apply(Env env, Cons args) {
+            Object content = READ_FILE.apply(env, args);
+            // TODO error check
+            Reader reader = new Reader();
+            return ((JispExp)reader.read("(do " + content + ")").car()).eval(env);
         }
     };
 }
