@@ -64,25 +64,25 @@ public class Env {
         Env.bindGlobal("+", Builtin.PLUS);
         Env.bindGlobal("*", Builtin.MULT);
         Env.bindGlobal("-", Builtin.MINUS);
-        Env.bindGlobal("/", null); // TODO
+        Env.bindGlobal("/", Builtin.DIV);
         Env.bindGlobal("<", Builtin.LT);
-        Env.bindGlobal(">", null); // TODO
-        Env.bindGlobal("<=", null); // TODO
-        Env.bindGlobal(">=", null); // TODO
+        Env.bindGlobal(">", Builtin.GT);
+        Env.bindGlobal("<=", Builtin.LTE);
+        Env.bindGlobal(">=", Builtin.GTE);
         Env.bindGlobal("=", Builtin.EQ);
-        Env.bindGlobal("dec", null); // TODO
-        Env.bindGlobal("inc", null); // TODO
-        Env.bindGlobal("car", null); // TODO
-        Env.bindGlobal("cdr", null); // TODO
+        Env.bindGlobal("dec", Builtin.DEC);
+        Env.bindGlobal("inc", Builtin.INC);
+        Env.bindGlobal("car", Builtin.CAR);
+        Env.bindGlobal("cdr", Builtin.CDR);
         Env.bindGlobal("cons", Builtin.CONS);
         Env.bindGlobal("cons?", Builtin.CONS_Q);
-        Env.bindGlobal("symbol?", null); // TODO
-        Env.bindGlobal("apply", null); // TODO
-        Env.bindGlobal("nil?", null); // TODO
-        Env.bindGlobal("vararg", null); // TODO
+        Env.bindGlobal("symbol?", Builtin.SYMBOL_Q);
+        Env.bindGlobal("apply", Builtin.APPLY);
+        Env.bindGlobal("nil?", Builtin.NIL_Q);
+        Env.bindGlobal("vararg", Builtin.VARARG);
         Env.bindGlobal("read-file", Builtin.READ_FILE);
         Env.bindGlobal("load-file", Builtin.LOAD_FILE);
-        Env.bindGlobal("die", null); // TODO
+        Env.bindGlobal("die", Builtin.DIE);
         return Env_();
     }
 }

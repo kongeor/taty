@@ -1,6 +1,7 @@
 package jisp;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static jisp.Cons.Cons_;
@@ -94,6 +95,17 @@ public class JispTest {
     @Test(expected = JispException.class)
     public void code_exp_no_clause() {
         assertEquals(null, readFirst("(cond (= 1 2) 3 false 2").eval(env));
+    }
+
+    @Test
+    public void apply() {
+        assertEquals(6, readFirst("(apply + '(1 2 3)").eval(env));
+    }
+
+    @Test
+    @Ignore
+    public void vararg() {
+        assertEquals(6, readFirst("((vararg (fn [args] (apply + args))) 1 2 3)").eval(env));
     }
 
     @Test
