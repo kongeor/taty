@@ -83,7 +83,7 @@ public class JispTest {
     }
 
     @Test
-    public void code_exp() {
+    public void cond_expr() {
         assertEquals(NumberExpr_(3), readFirst("(cond (= 1 1) 3").eval(env));
     }
 
@@ -109,12 +109,12 @@ public class JispTest {
 
     @Test
     public void read_file() {
-        assertEquals(String.class, readFirst("(read-file \"src/test/resources/fact.jisp\")").eval(env).getClass());
+        assertEquals(String.class, readFirst("(read-file \"src/test/resources/math.jisp\")").eval(env).getClass());
     }
 
     @Test
     public void load_file() {
-        assertEquals(NumberExpr_(120), readFirst("(do (load-file \"src/test/resources/fact.jisp\") (fact 5))").eval(env));
+        assertEquals(NumberExpr_(120), readFirst("(do (load-file \"src/test/resources/math.jisp\") (fact 5))").eval(env));
     }
 
     @Test

@@ -3,3 +3,37 @@
     (if (nil? coll)
       nil
       (cons (f (car coll)) (map f (cdr coll))))))
+
+(def reduce
+  (fn [f seed coll]
+    (if (nil? coll)
+      seed
+      (reduce f (f (car coll) seed) (cdr coll)))))
+
+(def filter
+  (fn [p coll]
+    (if (nil? coll)
+      nil
+      (if (p (car coll))
+        (cons (car coll) (filter p (cdr coll)))
+        (filter p (cdr coll))))))
+
+(def concat
+  (fn [xs ys]
+    (if (nil? xs)
+      ys
+      (cons (car xs) (concat (cdr xs) ys)))))
+
+(def reverse
+  (fn [coll]
+    (reduce (fn [e acc] (cons e acc)) nil coll)))
+
+(def -range
+    (fn [end step acc i]
+      (if (>= i end)
+        acc
+        (-range end step (cons i acc) (+ i step)))))
+
+(def range
+  (fn [start end step]
+    (reverse (-range end step nil start))))

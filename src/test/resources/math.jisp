@@ -1,0 +1,11 @@
+(def fact
+  (fn [n]
+    (if (= n 0)
+      1
+      (* n (fact (dec n))))))
+
+(def fibo
+  (fn [n]
+    (if (< n 3)
+      1
+      (+ (fibo (- n 1)) (fibo (- n 2))))))

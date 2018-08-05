@@ -11,6 +11,10 @@ public class BoolExpr extends JispExpr {
         this.val = val;
     }
 
+    public static BoolExpr BoolExpr_(Boolean val) {
+        return val ? T : F;
+    }
+
     @Override
     public Object eval(Env env) {
         return this;

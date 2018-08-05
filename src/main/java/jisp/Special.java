@@ -18,7 +18,7 @@ public class Special {
         public Object eval(Env env) {
 
             Cons b = binds;
-            while (b != null) {
+            while (b != NilExpr.NIL) {
                 SymbExpr car = (SymbExpr) b.car();
                 JispExpr form = (JispExpr) ((Cons) b.cdr()).car();
                 Object val = form.eval(env);
@@ -27,8 +27,8 @@ public class Special {
             }
 
             Cons bd = body;
-            Object result = null;
-            while (bd != null) {
+            Object result = NilExpr.NIL;
+            while (bd != NilExpr.NIL) {
                 result = ((JispExpr) bd.car()).eval(env);
                 bd = (Cons) bd.cdr();
             }
@@ -60,7 +60,7 @@ public class Special {
 
                     Cons p = params;
                     Cons a = args;
-                    while (p != null) {
+                    while (p != NilExpr.NIL) {
                         SymbExpr sym = (SymbExpr) p.car();
                         lambdaEnv = lambdaEnv.bind(sym, a.car());
                         p = (Cons) p.cdr();
@@ -68,8 +68,8 @@ public class Special {
                     }
 
                     Cons b = body;
-                    Object result = null;
-                    while (b != null) {
+                    Object result = NilExpr.NIL;
+                    while (b != NilExpr.NIL) {
                         result = ((JispExpr) b.car()).eval(lambdaEnv);
                         b = (Cons) b.cdr();
                     }
@@ -110,7 +110,7 @@ public class Special {
 
         @Override
         public Object eval(Env env) {
-            Object result = null;
+            Object result = NilExpr.NIL;
 
             Cons e = exprs;
             while (e != NilExpr.NIL) {
@@ -176,7 +176,9 @@ public class Special {
             // TODO check pairs
             Cons pair = clauses;
 
-            while(pair != null && pair.car() != null && ((Cons)pair.cdr()).car() != null) {
+            while(pair != NilExpr.NIL
+                    && pair.car() != NilExpr.NIL
+                    && ((Cons)pair.cdr()).car() != NilExpr.NIL) {
                 Object res = ((JispExpr) pair.car()).eval(env);
                 if (Bool.isTruthy(res)) {
                     return ((JispExpr)((Cons)pair.cdr()).car()).eval(env);
@@ -189,7 +191,7 @@ public class Special {
     }
 
     public static JispExpr checkForm(Cons cons) {
-        if (cons == null) {
+        if (cons == null) { // TODO redundant?
             return null;
         } else {
             Object car = cons.car();

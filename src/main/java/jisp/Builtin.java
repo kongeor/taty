@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import static jisp.BoolExpr.BoolExpr_;
 import static jisp.Cons.Cons_;
 import static jisp.NumberExpr.NumberExpr_;
 
@@ -33,12 +34,12 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             StringBuilder sb = new StringBuilder();
             Cons a = args;
-            while (a != null) {
+            while (a != NilExpr.NIL) {
                 sb.append(a.car());
                 a = (Cons) a.cdr();
             }
             System.out.println(sb.toString());
-            return null;
+            return NilExpr.NIL;
         }
     };
 
@@ -48,7 +49,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long sum = 0;
             Cons c = args;
-            while (c != null) {
+            while (c != NilExpr.NIL) {
                 sum = Math.addExact(sum, ((NumberExpr) c.car()).longVal());
                 c = (Cons) c.cdr();
             }
@@ -62,7 +63,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long sum = 1;
             Cons c = args;
-            while (c != null) {
+            while (c != NilExpr.NIL) {
                 sum = Math.multiplyExact(sum, ((NumberExpr) c.car()).longVal());
                 c = (Cons) c.cdr();
             }
@@ -96,7 +97,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long left = ((NumberExpr) args.car()).longVal();
             long right = ((NumberExpr)((Cons)args.cdr()).car()).longVal();
-            return left < right ? BoolExpr.T : BoolExpr.F;
+            return BoolExpr_(left < right);
         }
     };
 
@@ -106,7 +107,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long left = ((NumberExpr) args.car()).longVal();
             long right = ((NumberExpr)((Cons)args.cdr()).car()).longVal();
-            return left > right ? BoolExpr.T : BoolExpr.F;
+            return BoolExpr_(left > right);
         }
     };
 
@@ -116,7 +117,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long left = ((NumberExpr) args.car()).longVal();
             long right = ((NumberExpr)((Cons)args.cdr()).car()).longVal();
-            return left <= right ? BoolExpr.T : BoolExpr.F;
+            return BoolExpr_(left <= right);
         }
     };
 
@@ -126,7 +127,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             long left = ((NumberExpr) args.car()).longVal();
             long right = ((NumberExpr)((Cons)args.cdr()).car()).longVal();
-            return left >= right ? BoolExpr.T : BoolExpr.F;
+            return BoolExpr_(left >= right);
         }
     };
 
@@ -136,7 +137,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             Object left = args.car();
             Object right = ((Cons)args.cdr()).car();
-            return Objects.equals(left, right) ? BoolExpr.T : BoolExpr.F;
+            return BoolExpr_(Objects.equals(left, right));
         }
     };
 
@@ -145,7 +146,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             long param = ((NumberExpr)args.car()).longVal();
-            return NumberExpr_(Math.addExact(param, -1));
+            return NumberExpr_(Math.subtractExact(param, 1));
         }
     };
 
@@ -154,7 +155,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             long param = ((NumberExpr)args.car()).longVal();
-            return NumberExpr_(Math.subtractExact(param, 1));
+            return NumberExpr_(Math.addExact(param, 1));
         }
     };
 
@@ -181,8 +182,8 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             Object left = args.car();
-            Object right = null;
-            if (args.cdr() != null) {
+            Object right = NilExpr.NIL;
+            if (args.cdr() != NilExpr.NIL) {
                 right = ((Cons) args.cdr()).car();
             }
             return Cons_(left, right);
@@ -194,7 +195,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             Object param = args.car();
-            return param instanceof Cons;
+            return BoolExpr_(param instanceof Cons);
         }
     };
 
@@ -203,7 +204,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             Object param = args.car();
-            return param instanceof SymbExpr;
+            return BoolExpr_(param instanceof SymbExpr);
         }
     };
 
@@ -213,18 +214,19 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             IFn f = (IFn) args.car();
             Cons a = (Cons) ((Cons)args.cdr()).car();
-            return f.apply(env, evalArgs(env, a));
+//            return f.apply(env, evalArgs(env, a));
+            return f.apply(env, a);
         }
 
-        // TODO copy-pasta
-        private Cons evalArgs(Env env, Cons args) {
-            if (args == null) {
-                return null;
-            } else {
-                return new Cons(((JispExpr)args.car()).eval(env),
-                        evalArgs(env, (Cons)args.cdr()));
-            }
-        }
+//        // TODO copy-pasta
+//        private Cons evalArgs(Env env, Cons args) {
+//            if (args == NilExpr.NIL) {
+//                return NilExpr.NIL;
+//            } else {
+//                return new Cons(((JispExpr)args.car()).eval(env),
+//                        evalArgs(env, (Cons)args.cdr()));
+//            }
+//        }
     };
 
     public static Builtin NIL_Q = new Builtin("nil?") {
@@ -232,7 +234,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             Object param = args.car();
-            return param == NilExpr.NIL;
+            return BoolExpr_(param == NilExpr.NIL);
         }
     };
 
@@ -281,7 +283,7 @@ public abstract class Builtin implements IFn {
             Object msg = args.car();
             System.out.println(msg);
             System.exit(1);
-            return null;
+            return NilExpr.NIL;
         }
     };
 }

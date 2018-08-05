@@ -33,7 +33,7 @@ public class Env {
     }
 
     public static Env Env_() {
-        return new Env(null);
+        return new Env(NilExpr.NIL);
     }
 
     public static Env Env_(Cons cons) {

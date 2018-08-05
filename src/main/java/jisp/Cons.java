@@ -44,8 +44,8 @@ public class Cons extends JispExpr {
     }
 
     private Cons evalArgs(Env env, Cons args) {
-        if (args == null) { // TODO
-            return null;
+        if (args == NilExpr.NIL) {
+            return NilExpr.NIL;
         } else {
             return new Cons(((JispExpr)args.car).eval(env),
                 evalArgs(env, (Cons)args.cdr));
