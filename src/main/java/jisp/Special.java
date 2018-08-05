@@ -113,7 +113,7 @@ public class Special {
             Object result = null;
 
             Cons e = exprs;
-            while (e != null) {
+            while (e != NilExpr.NIL) {
                 result = ((JispExpr) e.car()).eval(env);
                 e = (Cons) e.cdr();
             }

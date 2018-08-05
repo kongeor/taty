@@ -10,7 +10,7 @@ public class ConsTest {
 
     @Test
     public void one_element() throws IOException {
-        Cons cons = new Cons(new NumberExpr(1), null);
+        Cons cons = new Cons(new NumberExpr(1), NilExpr.NIL);
         assertEquals("(1)", cons.toString());
     }
 

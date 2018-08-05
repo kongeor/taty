@@ -8,7 +8,7 @@ import static jisp.SymbExpr.SymbExp_;
 public class Env {
     
     private static final AtomicReference<Cons> globals =
-        new AtomicReference<>(null);
+        new AtomicReference<>(NilExpr.NIL);
 
     public static void bindGlobal(SymbExpr sym, Object val) {
         globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
@@ -19,7 +19,7 @@ public class Env {
     }
 
     public static void resetGlobalEnv() {
-        globals.updateAndGet(env -> null);
+        globals.updateAndGet(env -> NilExpr.NIL);
     }
 
     public static Object lookupGlobal(SymbExpr sym) {

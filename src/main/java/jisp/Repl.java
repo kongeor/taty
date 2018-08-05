@@ -52,9 +52,9 @@ public class Repl {
                 Cons read = reader.read(sb.toString());
                 sb = new StringBuilder();
 
-                Object result = null;
+                Object result = NilExpr.NIL;
 
-                if (read != null) {
+                if (read != NilExpr.NIL) {
                     JispExpr exp = (JispExpr) read.car();
 
                     while (exp != null) {

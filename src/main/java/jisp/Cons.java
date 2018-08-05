@@ -8,7 +8,7 @@ public class Cons extends JispExpr {
     private final Object cdr;
 
     public Cons(Object car) {
-        this(car, null);
+        this(car, NilExpr.NIL);
     }
 
     public Cons(Object car, Object cdr) {
@@ -17,7 +17,7 @@ public class Cons extends JispExpr {
     }
 
     public static Cons Cons_(Object car) {
-        return new Cons(car, null);
+        return new Cons(car, NilExpr.NIL);
     }
 
     public static Cons Cons_(Object car, Object cdr) {
@@ -44,7 +44,7 @@ public class Cons extends JispExpr {
     }
 
     private Cons evalArgs(Env env, Cons args) {
-        if (args == null) {
+        if (args == null) { // TODO
             return null;
         } else {
             return new Cons(((JispExpr)args.car).eval(env),
@@ -58,7 +58,7 @@ public class Cons extends JispExpr {
 
     public Object lookup(SymbExpr sym) {
         Cons c = this;
-        while (c != null) {
+        while (c != NilExpr.NIL) {
             Cons head = (Cons) c.car;
             if (Objects.equals(head.car, sym)) {
                 return head.cdr;
@@ -70,7 +70,7 @@ public class Cons extends JispExpr {
 
     public Cons reverse() {
         if (!(cdr instanceof Cons)) {
-            if (cdr == null) {
+            if (cdr == NilExpr.NIL) {
                 return this;
             } else {
                 return new Cons(cdr, car);
@@ -78,7 +78,7 @@ public class Cons extends JispExpr {
         } else {
             Cons c = (Cons) cdr;
             Cons rev = new Cons(car);
-            while (c != null) {
+            while (c != NilExpr.NIL) {
                 rev = new Cons(c.car, rev);
                 c = (Cons) c.cdr;
             }
@@ -109,7 +109,7 @@ public class Cons extends JispExpr {
         while(true) {
             sb.append(c.car);
 
-            if (c.cdr != null) {
+            if (c.cdr != NilExpr.NIL) {
                 if (!(c.cdr instanceof Cons)) {
                     sb.append(" . ").append(c.cdr);
                     break;

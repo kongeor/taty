@@ -136,7 +136,7 @@ public abstract class Builtin implements IFn {
         public Object apply(Env env, Cons args) {
             Object left = args.car();
             Object right = ((Cons)args.cdr()).car();
-            return Objects.equals(left, right);
+            return Objects.equals(left, right) ? BoolExpr.T : BoolExpr.F;
         }
     };
 
@@ -145,7 +145,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             long param = ((NumberExpr)args.car()).longVal();
-            return NumberExpr_(Math.addExact(param, 1));
+            return NumberExpr_(Math.addExact(param, -1));
         }
     };
 
@@ -232,7 +232,7 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons args) {
             Object param = args.car();
-            return param == null;
+            return param == NilExpr.NIL;
         }
     };
 
@@ -241,10 +241,8 @@ public abstract class Builtin implements IFn {
         @Override
         public Object apply(Env env, Cons parentArgs) {
             return (IFn) (nestedEnv, args) -> {
-//                IFn f = (IFn) parentArgs.car();
-//                return f.apply(nestedEnv, Cons_(new Special.QuoteExpr(args)));
-                // FIXME
-                return null;
+                IFn f = (IFn) parentArgs.car();
+                return f.apply(nestedEnv, Cons_(args));
             };
         }
     };

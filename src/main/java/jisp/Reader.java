@@ -14,7 +14,7 @@ public class Reader {
     public Cons read(String source) {
         PushbackReader reader = new PushbackReader(new StringReader(source));
 
-        Cons exprs = null;
+        Cons exprs = NilExpr.NIL;
 
         try {
             char c = (char) reader.read();
@@ -25,8 +25,8 @@ public class Reader {
                 c = (char) reader.read();
             }
 
-            if (exprs == null) {
-                return null;
+            if (exprs == NilExpr.NIL) {
+                return NilExpr.NIL;
             }
             return exprs.reverse();
         } catch (IOException e) {
@@ -106,7 +106,7 @@ public class Reader {
     public JispExpr readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
 
-        Cons exprs = null;
+        Cons exprs = NilExpr.NIL;
 
         while (c != terminator && c != '\uFFFF') {
             reader.unread(c);
@@ -115,10 +115,10 @@ public class Reader {
             readWhitespace(reader);
             c = (char) reader.read();
         }
-        if (exprs != null) {
+        if (exprs != NilExpr.NIL) {
             return Special.checkForm(exprs.reverse());
         } else {
-            return null;
+            return NilExpr.NIL;
         }
     }
 
@@ -130,14 +130,4 @@ public class Reader {
         reader.unread(c);
     }
 
-    public static void main(String[] args) throws IOException {
-        Cons exp = new Reader().read("5 10 (6 ( 3 33 ) 20 )");
-//        List<JispExpr> exp = new Reader().read("(6(3))");
-//        List<JispExpr> exp = new Reader().read("(6)");
-//        List<JispExpr> exp = new Reader().read("[6]");
-//        List<JispExpr> exp = new Reader().read("6 is? 5");
-//        List<JispExpr> exp = new Reader().read("(let [a 1] (+ a 5))");
-//        List<JispExpr> exp = new Reader().read("(let [a 1] 10)");
-        System.out.println(exp);
-    }
 }
