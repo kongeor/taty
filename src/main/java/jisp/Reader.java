@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
-import static jisp.StringExp.StringExp_;
-import static jisp.SymbExp.SymbExp_;
+import static jisp.StringExpr.StringExp_;
+import static jisp.SymbExpr.SymbExp_;
 
 public class Reader {
 
@@ -34,7 +34,7 @@ public class Reader {
         }
     }
 
-    private JispExp readExpr(PushbackReader reader) throws IOException {
+    private JispExpr readExpr(PushbackReader reader) throws IOException {
         readWhitespace(reader);
         char c = (char) reader.read();
 
@@ -43,18 +43,13 @@ public class Reader {
             return readNumber(reader);
         }
 
-        if (c == '&') {
-            readWhitespace(reader);
-            return readSymbol(reader, true);
-        }
-
         if (ALPHANUMS.contains("" + c)) {
             reader.unread(c);
-            return readSymbol(reader, false);
+            return readSymbol(reader);
         }
 
         if (c == '\'') {
-            return new Special.QuoteExp(readExpr(reader));
+            return new Special.QuoteExpr(readExpr(reader));
         }
 
         if (c == '"') {
@@ -72,7 +67,7 @@ public class Reader {
         throw new IllegalStateException("boom: " + c);
     }
 
-    public JispExp readNumber(PushbackReader reader) throws IOException {
+    public JispExpr readNumber(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -81,10 +76,10 @@ public class Reader {
             c = (char) reader.read();
         }
         reader.unread(c);
-        return new NumberExp(Integer.parseInt(sb.toString()));
+        return new NumberExpr(Integer.parseInt(sb.toString()));
     }
 
-    public JispExp readSymbol(PushbackReader reader, boolean isRest) throws IOException {
+    public JispExpr readSymbol(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -93,10 +88,10 @@ public class Reader {
             c = (char) reader.read();
         }
         reader.unread(c);
-        return SymbExp_(sb.toString(), isRest);
+        return SymbExp_(sb.toString());
     }
 
-    private JispExp readString(PushbackReader reader) throws IOException {
+    private JispExpr readString(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -108,15 +103,15 @@ public class Reader {
     }
 
 
-    public JispExp readList(PushbackReader reader, char terminator) throws IOException {
+    public JispExpr readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
 
         Cons exprs = null;
 
         while (c != terminator && c != '\uFFFF') {
             reader.unread(c);
-            JispExp jispExp = readExpr(reader);
-            exprs = new Cons(jispExp, exprs);
+            JispExpr jispExpr = readExpr(reader);
+            exprs = new Cons(jispExpr, exprs);
             readWhitespace(reader);
             c = (char) reader.read();
         }
@@ -137,12 +132,12 @@ public class Reader {
 
     public static void main(String[] args) throws IOException {
         Cons exp = new Reader().read("5 10 (6 ( 3 33 ) 20 )");
-//        List<JispExp> exp = new Reader().read("(6(3))");
-//        List<JispExp> exp = new Reader().read("(6)");
-//        List<JispExp> exp = new Reader().read("[6]");
-//        List<JispExp> exp = new Reader().read("6 is? 5");
-//        List<JispExp> exp = new Reader().read("(let [a 1] (+ a 5))");
-//        List<JispExp> exp = new Reader().read("(let [a 1] 10)");
+//        List<JispExpr> exp = new Reader().read("(6(3))");
+//        List<JispExpr> exp = new Reader().read("(6)");
+//        List<JispExpr> exp = new Reader().read("[6]");
+//        List<JispExpr> exp = new Reader().read("6 is? 5");
+//        List<JispExpr> exp = new Reader().read("(let [a 1] (+ a 5))");
+//        List<JispExpr> exp = new Reader().read("(let [a 1] 10)");
         System.out.println(exp);
     }
 }

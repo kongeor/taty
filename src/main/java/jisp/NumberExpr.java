@@ -1,27 +1,31 @@
 package jisp;
 
-public class NumberExp extends JispExp {
+public class NumberExpr extends JispExpr {
 
-    private final int val;
+    private final long val;
 
-    public NumberExp(int val) {
+    public NumberExpr(long val) {
         this.val = val;
     }
 
-    public static NumberExp NumberExp_(int val) {
-        return new NumberExp(val);
+    public static NumberExpr NumberExpr_(long val) {
+        return new NumberExpr(val);
+    }
+
+    public long longVal() {
+        return val;
     }
 
     @Override
     public Object eval(Env env) {
-        return val;
+        return this;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NumberExp numberExp = (NumberExp) o;
+        NumberExpr numberExp = (NumberExpr) o;
         return val == numberExp.val;
     }
 

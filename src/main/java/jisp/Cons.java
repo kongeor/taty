@@ -2,7 +2,7 @@ package jisp;
 
 import java.util.Objects;
 
-public class Cons extends JispExp {
+public class Cons extends JispExpr {
 
     private final Object car;
     private final Object cdr;
@@ -47,16 +47,16 @@ public class Cons extends JispExp {
         if (args == null) {
             return null;
         } else {
-            return new Cons(((JispExp)args.car).eval(env),
+            return new Cons(((JispExpr)args.car).eval(env),
                 evalArgs(env, (Cons)args.cdr));
         }
     }
 
-    public Cons bind(SymbExp sym, Object val) {
+    public Cons bind(SymbExpr sym, Object val) {
         return Cons_(Cons_(sym, val), this);
     }
 
-    public Object lookup(SymbExp sym) {
+    public Object lookup(SymbExpr sym) {
         Cons c = this;
         while (c != null) {
             Cons head = (Cons) c.car;
@@ -125,9 +125,9 @@ public class Cons extends JispExp {
     }
 
     public static void main(String[] args) {
-        Cons cons = new Cons(new NumberExp(5),
-                new Cons(new NumberExp(10),
-                        new Cons(new NumberExp(15))));
+        Cons cons = new Cons(new NumberExpr(5),
+                new Cons(new NumberExpr(10),
+                        new Cons(new NumberExpr(15))));
 
         // System.out.println(cons.prn());
         // System.out.println(cons.reverse().prn());

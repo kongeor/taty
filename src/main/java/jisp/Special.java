@@ -4,12 +4,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Special {
 
-    public static class LetExp extends JispExp {
+    public static class LetExpr extends JispExpr {
 
         private final Cons binds;
         private final Cons body;
 
-        public LetExp(Cons binds, Cons body) {
+        public LetExpr(Cons binds, Cons body) {
             this.binds = binds;
             this.body = body;
         }
@@ -19,8 +19,8 @@ public class Special {
 
             Cons b = binds;
             while (b != null) {
-                SymbExp car = (SymbExp) b.car();
-                JispExp form = (JispExp) ((Cons) b.cdr()).car();
+                SymbExpr car = (SymbExpr) b.car();
+                JispExpr form = (JispExpr) ((Cons) b.cdr()).car();
                 Object val = form.eval(env);
                 env = env.bind(car, val);
                 b = (Cons) ((Cons) b.cdr()).cdr();
@@ -29,7 +29,7 @@ public class Special {
             Cons bd = body;
             Object result = null;
             while (bd != null) {
-                result = ((JispExp) bd.car()).eval(env);
+                result = ((JispExpr) bd.car()).eval(env);
                 bd = (Cons) bd.cdr();
             }
 
@@ -37,7 +37,7 @@ public class Special {
         }
     }
 
-    public static class FnExp extends JispExp {
+    public static class FnExpr extends JispExpr {
 
         private static final AtomicLong ids = new AtomicLong(1);
 
@@ -45,7 +45,7 @@ public class Special {
         private final Cons body;
         private final long id;
 
-        public FnExp(Cons params, Cons body) {
+        public FnExpr(Cons params, Cons body) {
             this.params = params;
             this.body = body;
             this.id = ids.getAndIncrement();
@@ -61,21 +61,16 @@ public class Special {
                     Cons p = params;
                     Cons a = args;
                     while (p != null) {
-                        SymbExp sym = (SymbExp) p.car();
-                        if (sym.isRest()) {
-                            lambdaEnv = lambdaEnv.bind(sym, a);
-                            break;
-                        } else {
-                            lambdaEnv = lambdaEnv.bind(sym, a.car());
-                            p = (Cons) p.cdr();
-                            a = (Cons) a.cdr();
-                        }
+                        SymbExpr sym = (SymbExpr) p.car();
+                        lambdaEnv = lambdaEnv.bind(sym, a.car());
+                        p = (Cons) p.cdr();
+                        a = (Cons) a.cdr();
                     }
 
                     Cons b = body;
                     Object result = null;
                     while (b != null) {
-                        result = ((JispExp) b.car()).eval(lambdaEnv);
+                        result = ((JispExpr) b.car()).eval(lambdaEnv);
                         b = (Cons) b.cdr();
                     }
 
@@ -91,11 +86,11 @@ public class Special {
 
     }
 
-    public static class QuoteExp extends JispExp {
+    public static class QuoteExpr extends JispExpr {
 
         private final Object body;
 
-        public QuoteExp(Object body) {
+        public QuoteExpr(Object body) {
             this.body = body;
         }
 
@@ -105,11 +100,11 @@ public class Special {
         }
     }
 
-    public static class DoExp extends JispExp {
+    public static class DoExpr extends JispExpr {
 
         private final Cons exprs;
 
-        public DoExp(Cons exprs) {
+        public DoExpr(Cons exprs) {
             this.exprs = exprs;
         }
 
@@ -119,7 +114,7 @@ public class Special {
 
             Cons e = exprs;
             while (e != null) {
-                result = ((JispExp) e.car()).eval(env);
+                result = ((JispExpr) e.car()).eval(env);
                 e = (Cons) e.cdr();
             }
 
@@ -127,12 +122,12 @@ public class Special {
         }
     }
 
-    public static class DefExp extends JispExp {
+    public static class DefExpr extends JispExpr {
 
-        private final SymbExp symb;
-        private final JispExp val;
+        private final SymbExpr symb;
+        private final JispExpr val;
 
-        public DefExp(SymbExp symb, JispExp val) {
+        public DefExpr(SymbExpr symb, JispExpr val) {
             this.symb = symb;
             this.val = val;
         }
@@ -145,13 +140,13 @@ public class Special {
         }
     }
 
-    public static class IfExpr extends JispExp {
+    public static class IfExpr extends JispExpr {
 
-        private final JispExp pred;
-        private final JispExp ifExp;
-        private final JispExp elseExp;
+        private final JispExpr pred;
+        private final JispExpr ifExp;
+        private final JispExpr elseExp;
 
-        public IfExpr(JispExp pred, JispExp ifExp, JispExp elseExp) {
+        public IfExpr(JispExpr pred, JispExpr ifExp, JispExpr elseExp) {
             this.pred = pred;
             this.ifExp = ifExp;
             this.elseExp = elseExp;
@@ -168,11 +163,11 @@ public class Special {
         }
     }
 
-    public static class CondExp extends JispExp {
+    public static class CondExpr extends JispExpr {
 
         private final Cons clauses;
 
-        public CondExp(Cons clauses) {
+        public CondExpr(Cons clauses) {
             this.clauses = clauses;
         }
 
@@ -182,9 +177,9 @@ public class Special {
             Cons pair = clauses;
 
             while(pair != null && pair.car() != null && ((Cons)pair.cdr()).car() != null) {
-                Object res = ((JispExp) pair.car()).eval(env);
+                Object res = ((JispExpr) pair.car()).eval(env);
                 if (Bool.isTruthy(res)) {
-                    return ((JispExp)((Cons)pair.cdr()).car()).eval(env);
+                    return ((JispExpr)((Cons)pair.cdr()).car()).eval(env);
                 }
                 pair = (Cons)((Cons)pair.cdr()).cdr();
             }
@@ -193,27 +188,27 @@ public class Special {
         }
     }
 
-    public static JispExp checkForm(Cons cons) {
+    public static JispExpr checkForm(Cons cons) {
         if (cons == null) {
             return null;
         } else {
             Object car = cons.car();
-            if (SymbExp.SymbExp_("let").equals(car)) {
-                return new LetExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
-            } else if (SymbExp.SymbExp_("fn").equals(car)) {
-                return new FnExp((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
-            } else if (SymbExp.SymbExp_("quote").equals(car)) {
-                return new QuoteExp(((Cons)cons.cdr()).car());
-            } else if (SymbExp.SymbExp_("do").equals(car)) {
-                return new DoExp((Cons)cons.cdr());
-            } else if (SymbExp.SymbExp_("def").equals(car)) {
-                return new DefExp((SymbExp)((Cons)cons.cdr()).car(), (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car());
-            } else if (SymbExp.SymbExp_("if").equals(car)) {
-                return new IfExpr((JispExp)((Cons)cons.cdr()).car(),
-                        (JispExp)((Cons)((Cons)cons.cdr()).cdr()).car(),
-                        (JispExp)((Cons)(((Cons)((Cons)cons.cdr()).cdr()).cdr())).car());
-            } else if (SymbExp.SymbExp_("cond").equals(car)) {
-                return new CondExp((Cons) cons.cdr());
+            if (SymbExpr.SymbExp_("let").equals(car)) {
+                return new LetExpr((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
+            } else if (SymbExpr.SymbExp_("fn").equals(car)) {
+                return new FnExpr((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
+            } else if (SymbExpr.SymbExp_("quote").equals(car)) {
+                return new QuoteExpr(((Cons)cons.cdr()).car());
+            } else if (SymbExpr.SymbExp_("do").equals(car)) {
+                return new DoExpr((Cons)cons.cdr());
+            } else if (SymbExpr.SymbExp_("def").equals(car)) {
+                return new DefExpr((SymbExpr)((Cons)cons.cdr()).car(), (JispExpr)((Cons)((Cons)cons.cdr()).cdr()).car());
+            } else if (SymbExpr.SymbExp_("if").equals(car)) {
+                return new IfExpr((JispExpr)((Cons)cons.cdr()).car(),
+                        (JispExpr)((Cons)((Cons)cons.cdr()).cdr()).car(),
+                        (JispExpr)((Cons)(((Cons)((Cons)cons.cdr()).cdr()).cdr())).car());
+            } else if (SymbExpr.SymbExp_("cond").equals(car)) {
+                return new CondExpr((Cons) cons.cdr());
             }
 
             return cons;

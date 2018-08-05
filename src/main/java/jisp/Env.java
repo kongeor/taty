@@ -3,14 +3,14 @@ package jisp;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static jisp.Cons.Cons_;
-import static jisp.SymbExp.SymbExp_;
+import static jisp.SymbExpr.SymbExp_;
 
 public class Env {
     
     private static final AtomicReference<Cons> globals =
         new AtomicReference<>(null);
 
-    public static void bindGlobal(SymbExp sym, Object val) {
+    public static void bindGlobal(SymbExpr sym, Object val) {
         globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
     }
 
@@ -22,7 +22,7 @@ public class Env {
         globals.updateAndGet(env -> null);
     }
 
-    public static Object lookupGlobal(SymbExp sym) {
+    public static Object lookupGlobal(SymbExpr sym) {
         return globals.get().lookup(sym);
     }
 
@@ -40,7 +40,7 @@ public class Env {
         return new Env(cons);
     }
 
-    public Object lookup(SymbExp sym) {
+    public Object lookup(SymbExpr sym) {
         try {
             if (cons != null) {
                 return cons.lookup(sym);
@@ -50,15 +50,15 @@ public class Env {
         return lookupGlobal(sym);
     }
 
-    public Env bind(SymbExp sym, Object val) {
+    public Env bind(SymbExpr sym, Object val) {
         return Env_(Cons_(Cons_(sym, val), cons));
     }
 
     public static Env initBaseEnv() {
         Env.resetGlobalEnv();
-        Env.bindGlobal("true", Boolean.TRUE);
-        Env.bindGlobal("false", Boolean.FALSE);
-        Env.bindGlobal("nil", null);
+        Env.bindGlobal("true", BoolExpr.T);
+        Env.bindGlobal("false", BoolExpr.F);
+        Env.bindGlobal("nil", NilExpr.NIL);
 
         Env.bindGlobal("println", Builtin.PRINTLN);
         Env.bindGlobal("+", Builtin.PLUS);

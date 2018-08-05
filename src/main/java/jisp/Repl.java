@@ -55,11 +55,11 @@ public class Repl {
                 Object result = null;
 
                 if (read != null) {
-                    JispExp exp = (JispExp) read.car();
+                    JispExpr exp = (JispExpr) read.car();
 
                     while (exp != null) {
                         result = exp.eval(env);
-                        exp = (JispExp) read.cdr();
+                        exp = (JispExpr) read.cdr();
                     }
                     System.out.println(result);
                 }
