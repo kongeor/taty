@@ -67,6 +67,12 @@ public class JispTest {
     }
 
     @Test
+    public void quoted_list_with_false() {
+        assertEquals(Cons_(BoolExpr.F, Cons_(NumberExpr_(1))),
+                readFirst("'(false 1)").eval(env));
+    }
+
+    @Test
     public void quote_cons_short() {
         assertEquals(Cons_(NumberExpr_(1), Cons_(NumberExpr_(2), Cons_(NumberExpr_(3)))),
                 readFirst("'(1 2 3)").eval(env));
@@ -88,8 +94,13 @@ public class JispTest {
     }
 
     @Test
-    public void code_exp_second_clause() {
+    public void cond_exp_second_clause() {
         assertEquals(NumberExpr_(2), readFirst("(cond (= 1 2) 3 true 2").eval(env));
+    }
+
+    @Test
+    public void cond_exp_with_false() {
+        assertEquals(NumberExpr_(2), readFirst("(cond (if true false 1) 3 true 2").eval(env));
     }
 
     @Test(expected = JispException.class)
@@ -136,4 +147,10 @@ public class JispTest {
     public void funcs_are_true() {
         assertEquals(NumberExpr_(1), readFirst("(if (fn []) 1 2)").eval(env));
     }
+
+    @Test
+    public void eval_nested_form() {
+        assertEquals(NumberExpr_(2), readFirst("(if (car ((fn [] '(false 3)))) 1 2)").eval(env));
+    }
+
 }

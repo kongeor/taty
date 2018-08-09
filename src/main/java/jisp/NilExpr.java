@@ -9,6 +9,16 @@ public class NilExpr extends Cons {
     }
 
     @Override
+    public Object car() {
+        return NIL;
+    }
+
+    @Override
+    public Object cdr() {
+        return NIL;
+    }
+
+    @Override
     public Object eval(Env env) {
         return this;
     }

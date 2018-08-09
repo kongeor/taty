@@ -56,10 +56,6 @@ public class Env {
 
     public static Env initBaseEnv() {
         Env.resetGlobalEnv();
-        Env.bindGlobal("true", BoolExpr.T);
-        Env.bindGlobal("false", BoolExpr.F);
-        Env.bindGlobal("nil", NilExpr.NIL);
-
         Env.bindGlobal("println", Builtin.PRINTLN);
         Env.bindGlobal("+", Builtin.PLUS);
         Env.bindGlobal("*", Builtin.MULT);

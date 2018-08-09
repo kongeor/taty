@@ -37,3 +37,19 @@
 (def range
   (fn [start end step]
     (reverse (-range end step nil start))))
+
+(def -or
+  (fn [xs]
+    (cond
+      (nil? xs) nil
+      (car xs) (car xs)
+      true (-or (cdr xs)))))
+
+(def -or
+  (fn [xs]
+    (if xs
+      (if (car xs)
+        (car xs)
+        (-or (cdr xs)))
+      nil)))
+

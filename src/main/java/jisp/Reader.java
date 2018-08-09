@@ -88,7 +88,17 @@ public class Reader {
             c = (char) reader.read();
         }
         reader.unread(c);
-        return SymbExp_(sb.toString());
+
+        String s = sb.toString();
+        if ("true".equals(s)) {
+            return BoolExpr.T;
+        } else if ("false".equals(s)) {
+            return BoolExpr.F;
+        } else if ("nil".equals(s)) {
+            return NilExpr.NIL;
+        } else {
+            return SymbExp_(s);
+        }
     }
 
     private JispExpr readString(PushbackReader reader) throws IOException {

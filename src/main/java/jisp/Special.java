@@ -176,9 +176,7 @@ public class Special {
             // TODO check pairs
             Cons pair = clauses;
 
-            while(pair != NilExpr.NIL
-                    && pair.car() != NilExpr.NIL
-                    && ((Cons)pair.cdr()).car() != NilExpr.NIL) {
+            while(pair != NilExpr.NIL && pair.car() != NilExpr.NIL) {
                 Object res = ((JispExpr) pair.car()).eval(env);
                 if (Bool.isTruthy(res)) {
                     return ((JispExpr)((Cons)pair.cdr()).car()).eval(env);
