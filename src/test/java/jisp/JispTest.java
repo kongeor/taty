@@ -120,7 +120,7 @@ public class JispTest {
 
     @Test
     public void read_file() {
-        assertEquals(StringExpr.class, Eval.eval(env, readFirst("(read-file \"src/test/resources/math.jisp\")")).getClass());
+        assertEquals(Cons.class, Eval.eval(env, readFirst("(read-file \"src/test/resources/math.jisp\")")).getClass());
     }
 
     @Test
