@@ -1,6 +1,6 @@
 package jisp;
 
-public class NumberExpr extends JispExpr {
+public class NumberExpr implements JispExpr {
 
     private final long val;
 
@@ -14,11 +14,6 @@ public class NumberExpr extends JispExpr {
 
     public long longVal() {
         return val;
-    }
-
-    @Override
-    public Object eval(Env env) {
-        return this;
     }
 
     @Override

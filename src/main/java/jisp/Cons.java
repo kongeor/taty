@@ -2,8 +2,9 @@ package jisp;
 
 import java.util.Objects;
 
-public class Cons extends JispExpr {
+public class Cons implements JispExpr {
 
+    // TODO jisp expr
     private final Object car;
     private final Object cdr;
 
@@ -30,26 +31,6 @@ public class Cons extends JispExpr {
 
     public Object cdr() {
         return cdr;
-    }
-
-    @Override
-    public Object eval(Env env) {
-        Cons evalArgs = evalArgs(env, this);
-        if (!(evalArgs.car instanceof IFn)) {
-            throw new JispException("Cannot apply f: " + car + " Reason: " + evalArgs.car);
-        }
-        IFn fn = (IFn) evalArgs.car;
-        Cons args = (Cons) evalArgs.cdr;
-        return fn.apply(env, args);
-    }
-
-    private Cons evalArgs(Env env, Cons args) {
-        if (args == NilExpr.NIL) {
-            return NilExpr.NIL;
-        } else {
-            return new Cons(((JispExpr)args.car).eval(env),
-                evalArgs(env, (Cons)args.cdr));
-        }
     }
 
     public Cons bind(SymbExpr sym, Object val) {
@@ -79,7 +60,9 @@ public class Cons extends JispExpr {
     }
 
     public Cons reverse() {
-        if (!(cdr instanceof Cons)) {
+        if (this == NilExpr.NIL) {
+            return this;
+        } else if (!(cdr instanceof Cons)) {
             if (cdr == NilExpr.NIL) {
                 return this;
             } else {

@@ -258,7 +258,7 @@ public abstract class Builtin implements IFn {
             Path file = Paths.get("" + param);
             try {
                 byte[] bytes = Files.readAllBytes(file);
-                return new String(bytes, Charset.defaultCharset());
+                return new StringExpr(new String(bytes, Charset.defaultCharset()));
             } catch (IOException e) {
                 throw new JispException("Cannot read file: " + file.toUri(), e);
             }
@@ -272,7 +272,7 @@ public abstract class Builtin implements IFn {
             Object content = READ_FILE.apply(env, args);
             // TODO error check
             Reader reader = new Reader();
-            return ((JispExpr)reader.read("(do " + content + ")").car()).eval(env);
+            return Eval.eval(env, (JispExpr)reader.read("(do " + content + ")").car());
         }
     };
 

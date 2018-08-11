@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
+import static jisp.Cons.Cons_;
 import static jisp.StringExpr.StringExp_;
 import static jisp.SymbExpr.SymbExp_;
 
@@ -49,7 +50,7 @@ public class Reader {
         }
 
         if (c == '\'') {
-            return new Special.QuoteExpr(readExpr(reader));
+            return Cons_(SymbExp_("quote"), Cons_(readExpr(reader)));
         }
 
         if (c == '"') {

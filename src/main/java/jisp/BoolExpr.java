@@ -1,6 +1,6 @@
 package jisp;
 
-public class BoolExpr extends JispExpr {
+public class BoolExpr implements JispExpr {
 
     public static final BoolExpr T = new BoolExpr(true);
     public static final BoolExpr F = new BoolExpr(false);
@@ -13,11 +13,6 @@ public class BoolExpr extends JispExpr {
 
     public static BoolExpr BoolExpr_(Boolean val) {
         return val ? T : F;
-    }
-
-    @Override
-    public Object eval(Env env) {
-        return this;
     }
 
     @Override

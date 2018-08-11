@@ -53,3 +53,8 @@
         (-or (cdr xs)))
       nil)))
 
+(def f
+  (fn [x]
+    (fn [y]
+      (fn [z]
+        (+ x y z)))))

@@ -1,6 +1,6 @@
 package jisp;
 
-public class SymbExpr extends JispExpr {
+public class SymbExpr implements JispExpr {
 
     private final String symb;
 
@@ -17,11 +17,6 @@ public class SymbExpr extends JispExpr {
     }
 
     @Override
-    public Object eval(Env env) {
-        return env.lookup(this);
-    }
-
-    @Override 
     public boolean equals(Object o) {
         if (o == null) {
             return false;

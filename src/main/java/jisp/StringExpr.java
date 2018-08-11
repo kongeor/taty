@@ -1,6 +1,6 @@
 package jisp;
 
-public class StringExpr extends JispExpr {
+public class StringExpr implements JispExpr {
 
     private final String val;
 
@@ -10,11 +10,6 @@ public class StringExpr extends JispExpr {
 
     public static StringExpr StringExp_(String val) {
         return new StringExpr(val);
-    }
-
-    @Override
-    public Object eval(Env env) {
-        return this;
     }
 
     @Override
