@@ -2,7 +2,7 @@ package jisp;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Special {
+public class Eval {
 
     public static class LetExpr extends JispExpr {
 
@@ -21,7 +21,7 @@ public class Special {
             while (b != NilExpr.NIL) {
                 SymbExpr car = (SymbExpr) b.car();
                 JispExpr form = (JispExpr) ((Cons) b.cdr()).car();
-                Object val = form.eval(env);
+                Object val = Eval.eval(env, form);
                 env = env.bind(car, val);
                 b = (Cons) ((Cons) b.cdr()).cdr();
             }
@@ -29,7 +29,7 @@ public class Special {
             Cons bd = body;
             Object result = NilExpr.NIL;
             while (bd != NilExpr.NIL) {
-                result = ((JispExpr) bd.car()).eval(env);
+                result = Eval.eval(env, (JispExpr) bd.car());
                 bd = (Cons) bd.cdr();
             }
 
@@ -70,7 +70,7 @@ public class Special {
                     Cons b = body;
                     Object result = NilExpr.NIL;
                     while (b != NilExpr.NIL) {
-                        result = ((JispExpr) b.car()).eval(lambdaEnv);
+                        result = Eval.eval(lambdaEnv, (JispExpr) b.car());
                         b = (Cons) b.cdr();
                     }
 
@@ -114,7 +114,7 @@ public class Special {
 
             Cons e = exprs;
             while (e != NilExpr.NIL) {
-                result = ((JispExpr) e.car()).eval(env);
+                result = Eval.eval(env, (JispExpr) e.car());
                 e = (Cons) e.cdr();
             }
 
@@ -134,7 +134,7 @@ public class Special {
 
         @Override
         public Object eval(Env env) {
-            Object result = val.eval(env);
+            Object result = Eval.eval(env, val);
             Env.bindGlobal(symb, result);
             return result;
         }
@@ -154,11 +154,11 @@ public class Special {
 
         @Override
         public Object eval(Env env) {
-            Object res = pred.eval(env);
+            Object res = Eval.eval(env, pred);
             if (Bool.isTruthy(res)) {
-                return ifExp.eval(env);
+                return Eval.eval(env, ifExp);
             } else {
-                return elseExp.eval(env);
+                return Eval.eval(env, elseExp);
             }
         }
     }
@@ -177,9 +177,9 @@ public class Special {
             Cons pair = clauses;
 
             while(pair != NilExpr.NIL && pair.car() != NilExpr.NIL) {
-                Object res = ((JispExpr) pair.car()).eval(env);
+                Object res = Eval.eval(env, (JispExpr) pair.car());
                 if (Bool.isTruthy(res)) {
-                    return ((JispExpr)((Cons)pair.cdr()).car()).eval(env);
+                    return Eval.eval(env, (JispExpr)((Cons)pair.cdr()).car());
                 }
                 pair = (Cons)((Cons)pair.cdr()).cdr();
             }
@@ -188,31 +188,52 @@ public class Special {
         }
     }
 
-    // TODO
-    private static JispExpr checkForm(Cons cons) {
-        if (cons == null) { // TODO redundant?
-            return null;
-        } else {
-            Object car = cons.car();
-            if (SymbExpr.SymbExp_("let").equals(car)) {
-                return new LetExpr((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
-            } else if (SymbExpr.SymbExp_("fn").equals(car)) {
-                return new FnExpr((Cons)((Cons)cons.cdr()).car(), (Cons)((Cons)cons.cdr()).cdr());
-            } else if (SymbExpr.SymbExp_("quote").equals(car)) {
-                return new QuoteExpr(((Cons)cons.cdr()).car());
-            } else if (SymbExpr.SymbExp_("do").equals(car)) {
-                return new DoExpr((Cons)cons.cdr());
-            } else if (SymbExpr.SymbExp_("def").equals(car)) {
-                return new DefExpr((SymbExpr)((Cons)cons.cdr()).car(), (JispExpr)((Cons)((Cons)cons.cdr()).cdr()).car());
-            } else if (SymbExpr.SymbExp_("if").equals(car)) {
-                return new IfExpr((JispExpr)((Cons)cons.cdr()).car(),
-                        (JispExpr)((Cons)((Cons)cons.cdr()).cdr()).car(),
-                        (JispExpr)((Cons)(((Cons)((Cons)cons.cdr()).cdr()).cdr())).car());
-            } else if (SymbExpr.SymbExp_("cond").equals(car)) {
-                return new CondExpr((Cons) cons.cdr());
-            }
+    private static JispExpr evalApply(Env env, IFn f, Cons args) {
+        if (f == null) {
+            throw new JispException("Undefined is not a function");
+        }
+        return (JispExpr) f.apply(env, evalArgs(env, args));
+    }
 
-            return cons;
+    private static Cons evalArgs(Env env, Cons args) {
+        if (args == NilExpr.NIL) {
+            return NilExpr.NIL;
+        } else {
+            return new Cons(((JispExpr)args.car()).eval(env),
+                    evalArgs(env, (Cons)args.cdr()));
         }
     }
+
+    private static JispExpr evalSexpr(Env env, SymbExpr symb, Cons form) {
+
+        String s = symb.name();
+
+        switch (s) {
+            case "if": return (JispExpr) new IfExpr((JispExpr) form.nth(0), (JispExpr) form.nth(1), (JispExpr) form.nth(2)).eval(env);
+            case "do": return (JispExpr) new DoExpr(form).eval(env);
+            case "def": return (JispExpr) new DefExpr((SymbExpr)form.nth(0), (JispExpr) form.nth(1)).eval(env);
+            case "quote": return (JispExpr) form.car();
+            case "fn": return (JispExpr) new FnExpr((Cons) form.nth(0), (Cons) form.cdr()).eval(env);
+            case "resolve": return null; // TODO
+            case "cond": return (JispExpr) new CondExpr(form).eval(env);
+            case "let": return (JispExpr) new LetExpr((Cons) form.nth(0), (Cons) form.cdr()).eval(env);
+            default: return evalApply(env, (IFn)symb.eval(env), form);
+        }
+    }
+
+    public static JispExpr eval(Env env, JispExpr form) {
+        if (form instanceof Cons) {
+            Cons cons = (Cons) form;
+            if (cons.car() instanceof SymbExpr) {
+                return evalSexpr(env, (SymbExpr)cons.car(), (Cons) cons.cdr());
+            } else {
+                return evalApply(env, (IFn)((JispExpr) cons.car()).eval(env), (Cons) cons.cdr());
+            }
+        } else if (form instanceof SymbExpr) {
+            return (JispExpr) form.eval(env);
+        } else {
+            return form;
+        }
+    }
+
 }

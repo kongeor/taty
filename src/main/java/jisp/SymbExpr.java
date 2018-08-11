@@ -12,6 +12,10 @@ public class SymbExpr extends JispExpr {
         return new SymbExpr(symb);
     }
 
+    public String name() {
+        return symb;
+    }
+
     @Override
     public Object eval(Env env) {
         return env.lookup(this);

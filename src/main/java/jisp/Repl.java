@@ -58,7 +58,8 @@ public class Repl {
                     JispExpr exp = (JispExpr) read.car();
 
                     while (exp != NilExpr.NIL) {
-                        result = exp.eval(env);
+                        result = Eval.eval(env, exp);
+//                        result = exp.eval(env);
                         exp = (JispExpr) read.cdr();
                     }
                     System.out.println(result);

@@ -125,11 +125,13 @@ public class Reader {
             readWhitespace(reader);
             c = (char) reader.read();
         }
-        if (exprs != NilExpr.NIL) {
-            return Special.checkForm(exprs.reverse());
-        } else {
-            return NilExpr.NIL;
-        }
+
+        return exprs.reverse();
+//        if (exprs != NilExpr.NIL) {
+//            return Special.checkForm(exprs.reverse());
+//        } else {
+//            return NilExpr.NIL;
+//        }
     }
 
     private void readWhitespace(PushbackReader reader) throws IOException {

@@ -68,6 +68,16 @@ public class Cons extends JispExpr {
         throw new IllegalArgumentException("Cannot find symbol " + sym + " in env " + this);
     }
 
+    public Object nth(int n) {
+        int idx = 0;
+        Cons current = this;
+        while (current != NilExpr.NIL && idx != n) {
+            current = (Cons) current.cdr;
+            idx++;
+        }
+        return current.car;
+    }
+
     public Cons reverse() {
         if (!(cdr instanceof Cons)) {
             if (cdr == NilExpr.NIL) {
