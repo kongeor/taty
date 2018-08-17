@@ -1,9 +1,9 @@
-package jisp;
+package taty;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static jisp.SymbExpr.SymbExp_;
+import static taty.SymbExpr.SymbExp_;
 import static org.junit.Assert.*;
 
 public class EnvTest {

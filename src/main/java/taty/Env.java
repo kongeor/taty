@@ -1,9 +1,9 @@
-package jisp;
+package taty;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static jisp.Cons.Cons_;
-import static jisp.SymbExpr.SymbExp_;
+import static taty.Cons.Cons_;
+import static taty.SymbExpr.SymbExp_;
 
 public class Env {
     

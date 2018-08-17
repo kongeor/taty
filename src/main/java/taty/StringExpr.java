@@ -1,6 +1,6 @@
-package jisp;
+package taty;
 
-public class StringExpr implements JispExpr {
+public class StringExpr implements TatyExpr {
 
     private final String val;
 

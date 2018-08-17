@@ -1,6 +1,6 @@
-package jisp;
+package taty;
 
-public class SymbExpr implements JispExpr {
+public class SymbExpr implements TatyExpr {
 
     private final String symb;
 

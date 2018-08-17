@@ -1,11 +1,11 @@
-package jisp;
+package taty;
 
 import java.util.Scanner;
 
 public class Repl {
 
     private void printWelcome() {
-        System.out.println("Welcome to Jisp!");
+        System.out.println("Welcome to Taty!");
     }
 
     public void start() {
@@ -39,7 +39,7 @@ public class Repl {
                 if (parenDiff < 0) {
                     sb = new StringBuilder();
                     parenDiff = 0;
-                    throw new JispException("Unbalanced parens");
+                    throw new TatyException("Unbalanced parens");
                 }
                 if (parenDiff > 0) {
                     sb.append(data);
@@ -55,12 +55,12 @@ public class Repl {
                 Object result = NilExpr.NIL;
 
                 if (read != NilExpr.NIL) {
-                    JispExpr exp = (JispExpr) read.car();
+                    TatyExpr exp = (TatyExpr) read.car();
 
                     while (exp != NilExpr.NIL) {
                         result = Eval.eval(env, exp);
 //                        result = exp.eval(env);
-                        exp = (JispExpr) read.cdr();
+                        exp = (TatyExpr) read.cdr();
                     }
                     System.out.println(result);
                 }

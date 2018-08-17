@@ -1,10 +1,10 @@
-package jisp;
+package taty;
 
 import java.util.Objects;
 
-public class Cons implements JispExpr {
+public class Cons implements TatyExpr {
 
-    // TODO jisp expr
+    // TODO taty expr
     private final Object car;
     private final Object cdr;
 

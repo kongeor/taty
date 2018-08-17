@@ -1,8 +1,8 @@
-package jisp;
+package taty;
 
 import org.junit.Test;
 
-import static jisp.NumberExpr.NumberExpr_;
+import static taty.NumberExpr.NumberExpr_;
 import static org.junit.Assert.assertEquals;
 
 public class ReaderTest {

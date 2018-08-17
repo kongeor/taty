@@ -1,4 +1,4 @@
-group 'jisp'
+group 'taty'
 version '0.1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -14,12 +14,11 @@ dependencies {
 }
 
 test {
-    // testLogging.outputs.upToDateWhen {false}
     testLogging.showStandardStreams = true
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "jisp.Main"
+        attributes "Main-Class": "taty.Main"
     }
 }

@@ -1,6 +1,6 @@
-package jisp;
+package taty;
 
-import static jisp.Cons.Cons_;
+import static taty.Cons.Cons_;
 
 public class Main {
 

@@ -1,6 +1,6 @@
-package jisp;
+package taty;
 
-public class BoolExpr implements JispExpr {
+public class BoolExpr implements TatyExpr {
 
     public static final BoolExpr T = new BoolExpr(true);
     public static final BoolExpr F = new BoolExpr(false);

@@ -1,12 +1,12 @@
-package jisp;
+package taty;
 
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
-import static jisp.Cons.Cons_;
-import static jisp.StringExpr.StringExp_;
-import static jisp.SymbExpr.SymbExp_;
+import static taty.Cons.Cons_;
+import static taty.StringExpr.StringExp_;
+import static taty.SymbExpr.SymbExp_;
 
 public class Reader {
 
@@ -31,11 +31,11 @@ public class Reader {
             }
             return exprs.reverse();
         } catch (IOException e) {
-            throw new JispException("Cannot read source", e);
+            throw new TatyException("Cannot read source", e);
         }
     }
 
-    private JispExpr readExpr(PushbackReader reader) throws IOException {
+    private TatyExpr readExpr(PushbackReader reader) throws IOException {
         readWhitespace(reader);
         char c = (char) reader.read();
 
@@ -68,7 +68,7 @@ public class Reader {
         throw new IllegalStateException("boom: " + c);
     }
 
-    public JispExpr readNumber(PushbackReader reader) throws IOException {
+    public TatyExpr readNumber(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -80,7 +80,7 @@ public class Reader {
         return new NumberExpr(Integer.parseInt(sb.toString()));
     }
 
-    public JispExpr readSymbol(PushbackReader reader) throws IOException {
+    public TatyExpr readSymbol(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -102,7 +102,7 @@ public class Reader {
         }
     }
 
-    private JispExpr readString(PushbackReader reader) throws IOException {
+    private TatyExpr readString(PushbackReader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         char c = (char) reader.read();
@@ -114,15 +114,15 @@ public class Reader {
     }
 
 
-    public JispExpr readList(PushbackReader reader, char terminator) throws IOException {
+    public TatyExpr readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
 
         Cons exprs = NilExpr.NIL;
 
         while (c != terminator && c != '\uFFFF') {
             reader.unread(c);
-            JispExpr jispExpr = readExpr(reader);
-            exprs = new Cons(jispExpr, exprs);
+            TatyExpr tatyExpr = readExpr(reader);
+            exprs = new Cons(tatyExpr, exprs);
             readWhitespace(reader);
             c = (char) reader.read();
         }

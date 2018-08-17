@@ -1,15 +1,14 @@
-package jisp;
+package taty;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static jisp.Cons.Cons_;
-import static jisp.NumberExpr.NumberExpr_;
-import static jisp.SymbExpr.SymbExp_;
+import static taty.Cons.Cons_;
+import static taty.NumberExpr.NumberExpr_;
+import static taty.SymbExpr.SymbExp_;
 import static org.junit.Assert.assertEquals;
 
-public class JispTest {
+public class TatyTest {
 
     Env env;
     Reader reader = new Reader();
@@ -19,8 +18,8 @@ public class JispTest {
         env = Env.initBaseEnv();
     }
 
-    private JispExpr readFirst(String source) {
-        return (JispExpr) reader.read(source).car();
+    private TatyExpr readFirst(String source) {
+        return (TatyExpr) reader.read(source).car();
     }
 
     @Test
@@ -103,7 +102,7 @@ public class JispTest {
         assertEquals(NumberExpr_(2), Eval.eval(env, readFirst("(cond (if true false 1) 3 true 2")));
     }
 
-    @Test(expected = JispException.class)
+    @Test(expected = TatyException.class)
     public void code_exp_no_clause() {
         assertEquals(null, Eval.eval(env, readFirst("(cond (= 1 2) 3 false 2")));
     }
@@ -120,12 +119,12 @@ public class JispTest {
 
     @Test
     public void read_file() {
-        assertEquals(Cons.class, Eval.eval(env, readFirst("(read-file \"src/test/resources/math.jisp\")")).getClass());
+        assertEquals(Cons.class, Eval.eval(env, readFirst("(read-file \"src/test/resources/math.taty\")")).getClass());
     }
 
     @Test
     public void load_file() {
-        assertEquals(NumberExpr_(120), Eval.eval(env, readFirst("(do (load-file \"src/test/resources/math.jisp\") (fact 5))")));
+        assertEquals(NumberExpr_(120), Eval.eval(env, readFirst("(do (load-file \"src/test/resources/math.taty\") (fact 5))")));
     }
 
     @Test

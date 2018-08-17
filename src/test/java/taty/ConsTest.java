@@ -1,4 +1,4 @@
-package jisp;
+package taty;
 
 import org.junit.Test;
 

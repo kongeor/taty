@@ -1,4 +1,4 @@
-package jisp;
+package taty;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import static jisp.BoolExpr.BoolExpr_;
-import static jisp.Cons.Cons_;
-import static jisp.NumberExpr.NumberExpr_;
+import static taty.BoolExpr.BoolExpr_;
+import static taty.Cons.Cons_;
+import static taty.NumberExpr.NumberExpr_;
 
 public abstract class Builtin implements IFn {
 
@@ -223,7 +223,7 @@ public abstract class Builtin implements IFn {
 //            if (args == NilExpr.NIL) {
 //                return NilExpr.NIL;
 //            } else {
-//                return new Cons(((JispExpr)args.car()).eval(env),
+//                return new Cons(((TatyExpr)args.car()).eval(env),
 //                        evalArgs(env, (Cons)args.cdr()));
 //            }
 //        }
@@ -262,7 +262,7 @@ public abstract class Builtin implements IFn {
                 Reader reader = new Reader();
                 return reader.read("(do " + content + ")").car();
             } catch (IOException e) {
-                throw new JispException("Cannot read file: " + file.toUri(), e);
+                throw new TatyException("Cannot read file: " + file.toUri(), e);
             }
         }
     };
@@ -271,7 +271,7 @@ public abstract class Builtin implements IFn {
 
         @Override
         public Object apply(Env env, Cons args) {
-            JispExpr form = (JispExpr) READ_FILE.apply(env, args);
+            TatyExpr form = (TatyExpr) READ_FILE.apply(env, args);
             // TODO error check
             return Eval.eval(env, form);
         }

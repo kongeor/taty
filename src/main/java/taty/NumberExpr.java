@@ -1,6 +1,6 @@
-package jisp;
+package taty;
 
-public class NumberExpr implements JispExpr {
+public class NumberExpr implements TatyExpr {
 
     private final long val;
 
