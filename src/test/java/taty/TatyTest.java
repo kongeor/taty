@@ -1,19 +1,21 @@
 package taty;
 
-import org.junit.Before;
-import org.junit.Test;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static taty.Cons.Cons_;
 import static taty.NumberExpr.NumberExpr_;
 import static taty.SymbExpr.SymbExp_;
-import static org.junit.Assert.assertEquals;
 
 public class TatyTest {
 
     Env env;
     Reader reader = new Reader();
 
-    @Before
+    @BeforeEach
     public void init() {
         env = Env.initBaseEnv();
     }
@@ -102,9 +104,10 @@ public class TatyTest {
         assertEquals(NumberExpr_(2), Eval.eval(env, readFirst("(cond (if true false 1) 3 true 2")));
     }
 
-    @Test(expected = TatyException.class)
+    @Test
     public void code_exp_no_clause() {
-        assertEquals(null, Eval.eval(env, readFirst("(cond (= 1 2) 3 false 2")));
+        assertThrows(TatyException.class,
+                () -> Eval.eval(env, readFirst("(cond (= 1 2) 3 false 2")));
     }
 
     @Test

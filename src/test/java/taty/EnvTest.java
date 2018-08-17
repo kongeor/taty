@@ -1,14 +1,15 @@
 package taty;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static taty.SymbExpr.SymbExp_;
-import static org.junit.Assert.*;
 
 public class EnvTest {
 
-    @Before
+    @BeforeEach
     public void init() {
         Env.resetGlobalEnv();
     }
@@ -54,13 +55,16 @@ public class EnvTest {
         assertEquals(n6, env.lookup(b));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void unbound_lookup() {
-        SymbExpr a = SymbExp_("a");
-        SymbExpr b = SymbExp_("b");
-        NumberExpr n6 = new NumberExpr(6);
-        Env.bindGlobal(b, n6);
-        Env env = Env.Env_();
-        env.lookup(a);
+        assertThrows(IllegalArgumentException.class,
+                () -> {
+                    SymbExpr a = SymbExp_("a");
+                    SymbExpr b = SymbExp_("b");
+                    NumberExpr n6 = new NumberExpr(6);
+                    Env.bindGlobal(b, n6);
+                    Env env = Env.Env_();
+                    env.lookup(a);
+                });
     }
 }
