@@ -12,10 +12,10 @@ public class Reader {
 
     private static final String ALPHANUMS = "1234567890abcdefghijklmnopqrstuvwxyz_!-+*/<>=?";
 
-    public Cons read(String source) {
+    public TatyExpr read(String source) {
         PushbackReader reader = new PushbackReader(new StringReader(source));
 
-        Cons exprs = NilExpr.NIL;
+        TatyExpr exprs = NilExpr.NIL;
 
         try {
             char c = (char) reader.read();
@@ -29,7 +29,7 @@ public class Reader {
             if (exprs == NilExpr.NIL) {
                 return NilExpr.NIL;
             }
-            return exprs.reverse();
+            return ((Cons) exprs).reverse();
         } catch (IOException e) {
             throw new TatyException("Cannot read source", e);
         }
@@ -117,7 +117,7 @@ public class Reader {
     public TatyExpr readList(PushbackReader reader, char terminator) throws IOException {
         char c = (char) reader.read();
 
-        Cons exprs = NilExpr.NIL;
+        TatyExpr exprs = NilExpr.NIL;
 
         while (c != terminator && c != '\uFFFF') {
             reader.unread(c);
@@ -127,12 +127,11 @@ public class Reader {
             c = (char) reader.read();
         }
 
-        return exprs.reverse();
-//        if (exprs != NilExpr.NIL) {
-//            return Special.checkForm(exprs.reverse());
-//        } else {
-//            return NilExpr.NIL;
-//        }
+        if (exprs == NilExpr.NIL) {
+            return exprs;
+        } else {
+            return ((Cons) exprs).reverse();
+        }
     }
 
     private void readWhitespace(PushbackReader reader) throws IOException {

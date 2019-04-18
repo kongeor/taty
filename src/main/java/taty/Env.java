@@ -7,14 +7,14 @@ import static taty.SymbExpr.SymbExp_;
 
 public class Env {
     
-    private static final AtomicReference<Cons> globals =
+    private static final AtomicReference<TatyExpr> globals =
         new AtomicReference<>(NilExpr.NIL);
 
-    public static void bindGlobal(SymbExpr sym, Object val) {
+    public static void bindGlobal(SymbExpr sym, TatyExpr val) {
         globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
     }
 
-    public static void bindGlobal(String sym, Object val) {
+    public static void bindGlobal(String sym, TatyExpr val) {
         globals.updateAndGet(env -> Cons_(Cons_(SymbExp_(sym), val), env));
     }
 
@@ -22,13 +22,18 @@ public class Env {
         globals.updateAndGet(env -> NilExpr.NIL);
     }
 
-    public static Object lookupGlobal(SymbExpr sym) {
-        return globals.get().lookup(sym);
+    public static TatyExpr lookupGlobal(SymbExpr sym) {
+        TatyExpr g = globals.get();
+        if (g == NilExpr.NIL) {
+            return NilExpr.NIL;
+        } else {
+            return ((Cons) g).lookup(sym);
+        }
     }
 
-    private final Cons cons;
+    private final TatyExpr cons;
 
-    public Env(Cons cons) {
+    public Env(TatyExpr cons) {
         this.cons = cons;
     }
 
@@ -42,15 +47,15 @@ public class Env {
 
     public Object lookup(SymbExpr sym) {
         try {
-            if (cons != null) {
-                return cons.lookup(sym);
+            if (cons != NilExpr.NIL) {
+                return ((Cons) cons).lookup(sym);
             }
         } catch (IllegalArgumentException e) {
         }
         return lookupGlobal(sym);
     }
 
-    public Env bind(SymbExpr sym, Object val) {
+    public Env bind(SymbExpr sym, TatyExpr val) {
         return Env_(Cons_(Cons_(sym, val), cons));
     }
 

@@ -12,6 +12,6 @@ public class ReaderTest {
 
     @Test
     public void test_simple_read() {
-        assertEquals(NumberExpr_(6), reader.read("6").car());
+        assertEquals(NumberExpr_(6), ((Cons) reader.read("6")).car());
     }
 }

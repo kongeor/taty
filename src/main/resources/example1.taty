@@ -4,4 +4,4 @@
       1
       (* n (fact (dec n))))))
 
-(fact 5)
+(fact 10)

@@ -21,7 +21,7 @@ public class TatyTest {
     }
 
     private TatyExpr readFirst(String source) {
-        return (TatyExpr) reader.read(source).car();
+        return ((Cons) reader.read(source)).car();
     }
 
     @Test

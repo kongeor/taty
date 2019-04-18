@@ -49,18 +49,17 @@ public class Repl {
                 sb.append(data);
 
 
-                Cons read = reader.read(sb.toString());
+                TatyExpr read = reader.read(sb.toString());
                 sb = new StringBuilder();
 
                 Object result = NilExpr.NIL;
 
                 if (read != NilExpr.NIL) {
-                    TatyExpr exp = (TatyExpr) read.car();
+                    TatyExpr exp = ((Cons) read).car();
 
                     while (exp != NilExpr.NIL) {
                         result = Eval.eval(env, exp);
-//                        result = exp.eval(env);
-                        exp = (TatyExpr) read.cdr();
+                        exp = ((Cons) read).cdr();
                     }
                     System.out.println(result);
                 }
