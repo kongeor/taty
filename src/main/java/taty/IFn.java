@@ -2,6 +2,6 @@ package taty;
 
 public interface IFn extends TatyExpr {
 
-    TatyExpr apply(Env env, Cons args);
+    TatyExpr apply(Env env, TatyExpr args);
 
 }

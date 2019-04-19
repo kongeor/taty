@@ -30,7 +30,7 @@ public class Eval {
         final long id = ids.getAndIncrement();
         return new IFn() {
             @Override
-            public TatyExpr apply(Env env1, Cons args) {
+            public TatyExpr apply(Env env1, TatyExpr  args) {
                 Env lambdaEnv = env; // must use top env
 
                 TatyExpr p = params;
@@ -102,11 +102,11 @@ public class Eval {
     }
 
     private static TatyExpr evalApply(Env env, IFn f, TatyExpr args) {
+        // TODO f cannot be null
         if (f == null) {
             throw new TatyException("Undefined is not a function");
         }
-        // TODO fix cast
-        return f.apply(env, (Cons) evalArgs(env, args));
+        return f.apply(env, evalArgs(env, args));
     }
 
     private static TatyExpr evalArgs(Env env, TatyExpr args) {
