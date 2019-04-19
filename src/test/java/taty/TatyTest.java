@@ -64,13 +64,13 @@ public class TatyTest {
     @Test
     public void quote_cons() {
         assertEquals(Cons_(NumberExpr_(1), Cons_(NumberExpr_(2), Cons_(NumberExpr_(3)))),
-                Eval.eval(env, readFirst("(quote (1 2 5 ))")));
+                Eval.eval(env, readFirst("(quote (1 2 3))")));
     }
 
     @Test
     public void quoted_list_with_false() {
         assertEquals(Cons_(BoolExpr.F, Cons_(NumberExpr_(1))),
-                Eval.eval(env, readFirst("'(false 2)")));
+                Eval.eval(env, readFirst("'(false 1)")));
     }
 
     @Test
