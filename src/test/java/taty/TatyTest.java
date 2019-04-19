@@ -64,7 +64,7 @@ public class TatyTest {
     @Test
     public void quote_cons() {
         assertEquals(Cons_(NumberExpr_(1), Cons_(NumberExpr_(2), Cons_(NumberExpr_(3)))),
-                Eval.eval(env, readFirst("(quote (1 2 3))")));
+                Eval.eval(env, readFirst("(quote (1 2 5 ))")));
     }
 
     @Test

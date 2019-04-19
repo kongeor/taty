@@ -16,19 +16,14 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
-
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-
-    reports {
-        html.enabled = true
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter'
+        failFast = true
     }
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "taty.Main"
+        attributes 'Main-Class': 'taty.Main'
     }
 }
