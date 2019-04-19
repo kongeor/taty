@@ -18,7 +18,6 @@ dependencies {
 test {
     useJUnitPlatform {
         includeEngines 'junit-jupiter'
-        failFast = true
     }
 }
 
