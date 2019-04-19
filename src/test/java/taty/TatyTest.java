@@ -70,7 +70,7 @@ public class TatyTest {
     @Test
     public void quoted_list_with_false() {
         assertEquals(Cons_(BoolExpr.F, Cons_(NumberExpr_(1))),
-                Eval.eval(env, readFirst("'(false 1)")));
+                Eval.eval(env, readFirst("'(false 2)")));
     }
 
     @Test
