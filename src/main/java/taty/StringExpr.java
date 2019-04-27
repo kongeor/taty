@@ -8,7 +8,7 @@ public class StringExpr implements TatyExpr {
         this.val = val;
     }
 
-    public static StringExpr StringExp_(String val) {
+    public static StringExpr of(String val) {
         return new StringExpr(val);
     }
 

@@ -4,7 +4,6 @@ package taty;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static taty.NumberExpr.NumberExpr_;
 
 public class ReaderTest {
 
@@ -12,6 +11,6 @@ public class ReaderTest {
 
     @Test
     public void test_simple_read() {
-        assertEquals(NumberExpr_(6), ((Cons) reader.read("6")).car());
+        assertEquals(NumberExpr.of(6), ((Cons) reader.read("6")).car());
     }
 }

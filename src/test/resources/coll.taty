@@ -58,3 +58,14 @@
     (fn [y]
       (fn [z]
         (+ x y z)))))
+
+(def repeat
+  (fn [n f]
+    (cond
+      (> n 1)
+       (do
+         (f)
+         (repeat (dec n) f))
+      (= n 1) (f)
+      true nil)))
+

@@ -7,9 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import static taty.BoolExpr.BoolExpr_;
-import static taty.Cons.Cons_;
-import static taty.NumberExpr.NumberExpr_;
 
 public abstract class Builtin implements IFn {
 
@@ -53,7 +50,7 @@ public abstract class Builtin implements IFn {
                 sum = Math.addExact(sum, ((NumberExpr) ((Cons) c).car()).longVal());
                 c = ((Cons) c).cdr();
             }
-            return NumberExpr_(sum);
+            return NumberExpr.of(sum);
         }
     };
 
@@ -67,7 +64,7 @@ public abstract class Builtin implements IFn {
                 sum = Math.multiplyExact(sum, ((NumberExpr) ((Cons) c).car()).longVal());
                 c = ((Cons) c).cdr();
             }
-            return NumberExpr_(sum);
+            return NumberExpr.of(sum);
         }
     };
 
@@ -77,7 +74,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long n1 = ((NumberExpr) ((Cons) args).car()).longVal();
             long n2 = ((NumberExpr) (((Cons) args).nth(1))).longVal();
-            return NumberExpr_(n1 - n2);
+            return NumberExpr.of(n1 - n2);
         }
     };
 
@@ -87,7 +84,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long n1 = ((NumberExpr) ((Cons) args).car()).longVal();
             long n2 = ((NumberExpr)((Cons)args).nth(1)).longVal();
-            return NumberExpr_(n1 / n2);
+            return NumberExpr.of(n1 / n2);
         }
     };
 
@@ -97,7 +94,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long left = ((NumberExpr) ((Cons) args).car()).longVal();
             long right = ((NumberExpr)(((Cons) args).nth(1))).longVal();
-            return BoolExpr_(left < right);
+            return BoolExpr.of(left < right);
         }
     };
 
@@ -107,7 +104,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long left = ((NumberExpr) ((Cons) args).car()).longVal();
             long right = ((NumberExpr)((Cons) args).nth(1)).longVal();
-            return BoolExpr_(left > right);
+            return BoolExpr.of(left > right);
         }
     };
 
@@ -117,7 +114,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long left = ((NumberExpr) ((Cons) args).car()).longVal();
             long right = ((NumberExpr)((Cons)args).nth(1)).longVal();
-            return BoolExpr_(left <= right);
+            return BoolExpr.of(left <= right);
         }
     };
 
@@ -127,7 +124,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             long left = ((NumberExpr) ((Cons) args).car()).longVal();
             long right = ((NumberExpr)((Cons)args).nth(1)).longVal();
-            return BoolExpr_(left >= right);
+            return BoolExpr.of(left >= right);
         }
     };
 
@@ -137,7 +134,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr args) {
             TatyExpr left = ((Cons) args).car();
             TatyExpr right = ((Cons) args).nth(1);
-            return BoolExpr_(Objects.equals(left, right));
+            return BoolExpr.of(Objects.equals(left, right));
         }
     };
 
@@ -146,7 +143,7 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             long param = ((NumberExpr) ((Cons) args).car()).longVal();
-            return NumberExpr_(Math.subtractExact(param, 1));
+            return NumberExpr.of(Math.subtractExact(param, 1));
         }
     };
 
@@ -155,7 +152,7 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             long param = ((NumberExpr) ((Cons) args).car()).longVal();
-            return NumberExpr_(Math.addExact(param, 1));
+            return NumberExpr.of(Math.addExact(param, 1));
         }
     };
 
@@ -186,7 +183,7 @@ public abstract class Builtin implements IFn {
             if (((Cons) args).cdr() != NilExpr.NIL) {
                 right = ((Cons) ((Cons) args).cdr()).car();
             }
-            return Cons_(left, right);
+            return new Cons(left, right);
         }
     };
 
@@ -195,7 +192,7 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             Object param = ((Cons) args).car();
-            return BoolExpr_(param instanceof Cons);
+            return BoolExpr.of(param instanceof Cons);
         }
     };
 
@@ -204,7 +201,7 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             Object param = ((Cons) args).car();
-            return BoolExpr_(param instanceof SymbExpr);
+            return BoolExpr.of(param instanceof SymbExpr);
         }
     };
 
@@ -223,7 +220,7 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             Object param = ((Cons) args).car();
-            return BoolExpr_(param == NilExpr.NIL);
+            return BoolExpr.of(param == NilExpr.NIL);
         }
     };
 
@@ -233,7 +230,7 @@ public abstract class Builtin implements IFn {
         public TatyExpr apply(Env env, TatyExpr parentArgs) {
             return (IFn) (nestedEnv, args) -> {
                 IFn f = (IFn) ((Cons) parentArgs).car();
-                return f.apply(nestedEnv, Cons_(args));
+                return f.apply(nestedEnv, new Cons(args));
             };
         }
     };

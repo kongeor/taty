@@ -6,6 +6,7 @@ public class Cons implements TatyExpr {
 
     private final TatyExpr car;
     private final TatyExpr cdr;
+    private final int length;
 
     public Cons(TatyExpr car) {
         this(car, NilExpr.NIL);
@@ -14,14 +15,22 @@ public class Cons implements TatyExpr {
     public Cons(TatyExpr car, TatyExpr cdr) {
         this.car = car;
         this.cdr = cdr;
+        this.length = 1 + lengthImpl(cdr);
+
     }
 
-    public static Cons Cons_(TatyExpr car) {
-        return new Cons(car, NilExpr.NIL);
+    private int lengthImpl(TatyExpr expr) {
+        if (expr == NilExpr.NIL) {
+            return 0;
+        } else if (expr instanceof Cons) {
+            return ((Cons) expr).length();
+        } else {
+            return 1;
+        }
     }
 
-    public static Cons Cons_(TatyExpr car, TatyExpr cdr) {
-        return new Cons(car, cdr);
+    public int length() {
+        return this.length;
     }
 
     public TatyExpr car() {
@@ -30,10 +39,6 @@ public class Cons implements TatyExpr {
 
     public TatyExpr cdr() {
         return cdr;
-    }
-
-    public Cons bind(SymbExpr sym, TatyExpr val) {
-        return Cons_(Cons_(sym, val), this);
     }
 
     public TatyExpr lookup(SymbExpr sym) {
@@ -45,7 +50,7 @@ public class Cons implements TatyExpr {
             }
             c = ((Cons) c).cdr;
         }
-        throw new IllegalArgumentException("Cannot find symbol " + sym + " in env " + this);
+        return null;
     }
 
     public TatyExpr nth(int n) {

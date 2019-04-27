@@ -11,7 +11,7 @@ public class BoolExpr implements TatyExpr {
         this.val = val;
     }
 
-    public static BoolExpr BoolExpr_(Boolean val) {
+    public static BoolExpr of(Boolean val) {
         return val ? T : F;
     }
 

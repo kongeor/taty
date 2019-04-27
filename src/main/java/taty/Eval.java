@@ -59,7 +59,7 @@ public class Eval {
         };
     }
 
-    private static TatyExpr evalDo(Env env, Cons exprs) {
+    private static TatyExpr evalDo(Env env, TatyExpr exprs) {
         TatyExpr result = NilExpr.NIL;
 
         TatyExpr e = exprs;
@@ -86,7 +86,7 @@ public class Eval {
         }
     }
 
-    private static TatyExpr evalCond(Env env, Cons clauses) {
+    private static TatyExpr evalCond(Env env, TatyExpr clauses) {
         // TODO check pairs
         TatyExpr pair = clauses;
 
@@ -118,19 +118,34 @@ public class Eval {
         }
     }
 
-    private static TatyExpr evalSexpr(Env env, SymbExpr symb, Cons form) {
+    private static TatyExpr evalSexpr(Env env, SymbExpr symb, TatyExpr form) {
 
         String s = symb.name();
 
         switch (s) {
-            case "if": return evalIf(env, form.nth(0), form.nth(1), form.nth(2));
+            case "if": {
+                if (form == NilExpr.NIL || ((Cons) form).length() < 2) {
+                    throw new TatyException("Too few arguments to if");
+                }
+                Cons f = (Cons) form;
+                return evalIf(env, f.nth(0), f.nth(1), f.nth(2));
+            }
             case "do": return evalDo(env, form);
-            case "def": return evalDef(env, (SymbExpr)form.nth(0), form.nth(1));
-            case "quote": return form.car();
-            case "fn": return evalFn(env, form.nth(0), form.cdr());
-            case "resolve": return Env.lookupGlobal((SymbExpr) eval(env, form.car()));
+            case "def": {
+                Cons f = (Cons) form;
+                return evalDef(env, (SymbExpr)f.nth(0), f.nth(1));
+            }
+            case "quote": return ((Cons) form).car();
+            case "fn": {
+                Cons f = (Cons) form;
+                return evalFn(env, f.nth(0), f.cdr());
+            }
+            case "resolve": return Env.lookupGlobal((SymbExpr) eval(env, ((Cons) form).car()));
             case "cond": return evalCond(env, form);
-            case "let": return evalLet(env, form.nth(0), form.cdr());
+            case "let": {
+                Cons f = (Cons) form;
+                return evalLet(env, f.nth(0), f.cdr());
+            }
             default: return evalApply(env, (IFn) eval(env, symb), form);
         }
     }
@@ -139,7 +154,7 @@ public class Eval {
         if (form instanceof Cons && form != NilExpr.NIL) {
             Cons cons = (Cons) form;
             if (cons.car() instanceof SymbExpr) {
-                return evalSexpr(env, (SymbExpr)cons.car(), (Cons) cons.cdr());
+                return evalSexpr(env, (SymbExpr)cons.car(), cons.cdr());
             } else {
                 return evalApply(env, (IFn)eval(env, cons.car()), cons.cdr());
             }

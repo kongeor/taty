@@ -52,16 +52,14 @@ public class Repl {
                 TatyExpr read = reader.read(sb.toString());
                 sb = new StringBuilder();
 
-                Object result = NilExpr.NIL;
-
                 if (read != NilExpr.NIL) {
-                    TatyExpr exp = ((Cons) read).car();
+                    TatyExpr exp = read;
 
                     while (exp != NilExpr.NIL) {
-                        result = Eval.eval(env, exp);
-                        exp = ((Cons) read).cdr();
+                        TatyExpr result = Eval.eval(env, (((Cons) exp).car()));
+                        exp = ((Cons) exp).cdr();
+                        System.out.println(result);
                     }
-                    System.out.println(result);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

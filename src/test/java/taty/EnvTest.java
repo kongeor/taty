@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static taty.SymbExpr.SymbExp_;
 
 public class EnvTest {
 
@@ -17,7 +16,7 @@ public class EnvTest {
     @Test
     public void global_lookup() {
         NumberExpr num = new NumberExpr(5);
-        SymbExpr sym = SymbExp_("a");
+        SymbExpr sym = SymbExpr.of("a");
         Env.bindGlobal(sym, num);
         assertEquals(num, Env.lookupGlobal(sym));
     }
@@ -25,7 +24,7 @@ public class EnvTest {
     @Test
     public void lookup() {
         NumberExpr num = new NumberExpr(5);
-        SymbExpr sym = SymbExp_("a");
+        SymbExpr sym = SymbExpr.of("a");
         Env env = Env.Env_();
         env = env.bind(sym, num);
         assertEquals(num, env.lookup(sym));
@@ -35,7 +34,7 @@ public class EnvTest {
     public void lookup_shadows_global() {
         NumberExpr num = new NumberExpr(5);
         NumberExpr fallback = new NumberExpr(6);
-        SymbExpr sym = SymbExp_("a");
+        SymbExpr sym = SymbExpr.of("a");
         Env.bindGlobal(sym, fallback);
         Env env = Env.Env_();
         env = env.bind(sym, num);
@@ -46,8 +45,8 @@ public class EnvTest {
     public void lookup_fallback() {
         NumberExpr n5 = new NumberExpr(5);
         NumberExpr n6 = new NumberExpr(6);
-        SymbExpr a = SymbExp_("a");
-        SymbExpr b = SymbExp_("b");
+        SymbExpr a = SymbExpr.of("a");
+        SymbExpr b = SymbExpr.of("b");
         Env.bindGlobal(a, n5);
         Env env = Env.Env_();
         env = env.bind(b, n6);
@@ -59,8 +58,8 @@ public class EnvTest {
     public void unbound_lookup() {
         assertThrows(IllegalArgumentException.class,
                 () -> {
-                    SymbExpr a = SymbExp_("a");
-                    SymbExpr b = SymbExp_("b");
+                    SymbExpr a = SymbExpr.of("a");
+                    SymbExpr b = SymbExpr.of("b");
                     NumberExpr n6 = new NumberExpr(6);
                     Env.bindGlobal(b, n6);
                     Env env = Env.Env_();

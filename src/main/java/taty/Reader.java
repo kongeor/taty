@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
-import static taty.Cons.Cons_;
-import static taty.StringExpr.StringExp_;
-import static taty.SymbExpr.SymbExp_;
-
 public class Reader {
 
     private static final String ALPHANUMS = "1234567890abcdefghijklmnopqrstuvwxyz_!-+*/<>=?";
@@ -50,7 +46,7 @@ public class Reader {
         }
 
         if (c == '\'') {
-            return Cons_(SymbExp_("quote"), Cons_(readExpr(reader)));
+            return new Cons(SymbExpr.of("quote"), new Cons(readExpr(reader)));
         }
 
         if (c == '"') {
@@ -98,7 +94,7 @@ public class Reader {
         } else if ("nil".equals(s)) {
             return NilExpr.NIL;
         } else {
-            return SymbExp_(s);
+            return SymbExpr.of(s);
         }
     }
 
@@ -110,7 +106,7 @@ public class Reader {
             sb.append(c);
             c = (char) reader.read();
         }
-        return StringExp_(sb.toString());
+        return StringExpr.of(sb.toString());
     }
 
 

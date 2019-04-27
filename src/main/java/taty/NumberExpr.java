@@ -8,7 +8,7 @@ public class NumberExpr implements TatyExpr {
         this.val = val;
     }
 
-    public static NumberExpr NumberExpr_(long val) {
+    public static NumberExpr of(long val) {
         return new NumberExpr(val);
     }
 

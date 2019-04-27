@@ -1,33 +1,30 @@
 package taty;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-import static taty.Cons.Cons_;
-import static taty.SymbExpr.SymbExp_;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Env {
-    
-    private static final AtomicReference<TatyExpr> globals =
-        new AtomicReference<>(NilExpr.NIL);
 
+    private static Map<SymbExpr, TatyExpr> globals = new HashMap<>();
+    
     public static void bindGlobal(SymbExpr sym, TatyExpr val) {
-        globals.updateAndGet(env -> Cons_(Cons_(sym, val), env));
+        globals.put(sym, val);
     }
 
     public static void bindGlobal(String sym, TatyExpr val) {
-        globals.updateAndGet(env -> Cons_(Cons_(SymbExp_(sym), val), env));
+        globals.put(SymbExpr.of(sym), val);
     }
 
     public static void resetGlobalEnv() {
-        globals.updateAndGet(env -> NilExpr.NIL);
+        globals.clear();
     }
 
     public static TatyExpr lookupGlobal(SymbExpr sym) {
-        TatyExpr g = globals.get();
-        if (g == NilExpr.NIL) {
-            return NilExpr.NIL;
+        TatyExpr expr = globals.get(sym);
+        if (expr == null) {
+            throw new IllegalArgumentException("Symbol " + sym + " not found in env");
         } else {
-            return ((Cons) g).lookup(sym);
+            return expr;
         }
     }
 
@@ -46,17 +43,17 @@ public class Env {
     }
 
     public Object lookup(SymbExpr sym) {
-        try {
-            if (cons != NilExpr.NIL) {
-                return ((Cons) cons).lookup(sym);
+        if (cons != NilExpr.NIL) {
+            TatyExpr lookup = ((Cons) cons).lookup(sym);
+            if (lookup != null) {
+                return lookup;
             }
-        } catch (IllegalArgumentException e) {
         }
         return lookupGlobal(sym);
     }
 
     public Env bind(SymbExpr sym, TatyExpr val) {
-        return Env_(Cons_(Cons_(sym, val), cons));
+        return Env_(new Cons(new Cons(sym, val), cons));
     }
 
     public static Env initBaseEnv() {
