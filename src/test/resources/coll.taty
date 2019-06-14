@@ -38,6 +38,12 @@
   (fn [start end step]
     (reverse (-range end step nil start))))
 
+(def range
+  (fn [start end step]
+    (if (>= start end)
+      nil
+      (cons start (range (+ start step) end step)))))
+
 (def -or
   (fn [xs]
     (cond

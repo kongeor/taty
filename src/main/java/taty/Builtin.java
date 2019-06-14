@@ -34,6 +34,9 @@ public abstract class Builtin implements IFn {
             while (a != NilExpr.NIL) {
                 sb.append(((Cons) a).car());
                 a = ((Cons) a).cdr();
+                if (a != NilExpr.NIL) {
+                    sb.append(" ");
+                }
             }
             System.out.println(sb.toString());
             return NilExpr.NIL;
@@ -210,8 +213,8 @@ public abstract class Builtin implements IFn {
         @Override
         public TatyExpr apply(Env env, TatyExpr args) {
             IFn f = (IFn) ((Cons) args).car();
-            Cons a = (Cons) ((Cons) ((Cons) args).cdr()).car();
-            return f.apply(env, a);
+            TatyExpr expr = ((Cons) ((Cons) args).cdr()).car();
+            return f.apply(env, expr);
         }
     };
 

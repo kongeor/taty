@@ -18,7 +18,10 @@ public class Reader {
 
             while (c != '\uFFFF') {
                 reader.unread(c);
-                exprs = new Cons(readExpr(reader), exprs);
+                TatyExpr tatyExpr = readExpr(reader);
+                if (tatyExpr != null) {
+                    exprs = new Cons(tatyExpr, exprs);
+                }
                 c = (char) reader.read();
             }
 
@@ -32,8 +35,17 @@ public class Reader {
     }
 
     private TatyExpr readExpr(PushbackReader reader) throws IOException {
-        readWhitespace(reader);
         char c = (char) reader.read();
+
+        if (Character.isWhitespace(c)) {
+            readWhitespace(reader);
+            return null;
+        }
+
+        if (c == ';') {
+            readComment(reader);
+            return null;
+        }
 
         if (Character.isDigit(c)) {
             reader.unread(c);
@@ -127,6 +139,14 @@ public class Reader {
             return exprs;
         } else {
             return ((Cons) exprs).reverse();
+        }
+    }
+
+    private void readComment(PushbackReader reader) throws IOException {
+        char c = (char) reader.read();
+
+        while (c != '\n') {
+            c = (char) reader.read();
         }
     }
 
