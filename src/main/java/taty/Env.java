@@ -56,6 +56,11 @@ public class Env {
         return Env_(new Cons(new Cons(sym, val), cons));
     }
 
+    @Override
+    public String toString() {
+        return "" + cons;
+    }
+
     public static Env initBaseEnv() {
         Env.resetGlobalEnv();
         Env.bindGlobal("println", Builtin.PRINTLN);

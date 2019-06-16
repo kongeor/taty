@@ -25,6 +25,20 @@ public class ReaderTest {
     }
 
     @Test
+    public void list_with_comment() {
+        assertEquals(new Cons(NumberExpr.of(6),
+                new Cons(NumberExpr.of(5),
+                        new Cons(NumberExpr.of(2)))), ((Cons) reader.read("(6 ;yolo\n 5 2)")).car());
+    }
+
+    @Test
+    public void mixed() {
+        assertEquals(new Cons(NumberExpr.of(6),
+                new Cons(NumberExpr.of(5),
+                        new Cons(NumberExpr.of(2)))), ((Cons) reader.read("    6   ;;yo\n\n;;yo\n\n5 2")));
+    }
+
+    @Test
     public void comment_read() {
         assertEquals(NumberExpr.of(6), ((Cons) reader.read("; comment!\n6")).car());
     }

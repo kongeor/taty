@@ -55,6 +55,11 @@ public class TatyTest {
     }
 
     @Test
+    public void fn_three_args() {
+        assertEquals(NumberExpr.of(6), Eval.eval(env, readFirst("((fn [a b c] (+ a b c)) 1 2 3)")));
+    }
+
+    @Test
     public void fn_mult_expr() {
         assertEquals(NumberExpr.of(2), Eval.eval(env, readFirst("((fn [] 1 2))")));
     }

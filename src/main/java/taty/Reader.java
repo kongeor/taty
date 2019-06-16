@@ -130,7 +130,9 @@ public class Reader {
         while (c != terminator && c != '\uFFFF') {
             reader.unread(c);
             TatyExpr tatyExpr = readExpr(reader);
-            exprs = new Cons(tatyExpr, exprs);
+            if (tatyExpr != null) {
+                exprs = new Cons(tatyExpr, exprs);
+            }
             readWhitespace(reader);
             c = (char) reader.read();
         }
