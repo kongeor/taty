@@ -42,7 +42,7 @@ from [releases](https://github.com/kongeor/taty/releases).
 
 Running without params will start a REPL session:
 
-```js
+```sh
 ➜ ./taty-0.1.0-linux
 Welcome to Taty!
 (\)=>
@@ -50,7 +50,7 @@ Welcome to Taty!
 
 Passing one argument will evaluate the provided file:
 
-```js
+```sh
 ➜ ./taty-0.1.0-linux fact.taty
 120
 ```
