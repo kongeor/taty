@@ -37,7 +37,8 @@ These are some of the resources that inspired the creation of this project:
 
 ### Getting an executable
 
-If you are on linux or osx you can grab the graalvm built provided executables from [releases](releases).
+If you are on linux or osx you can grab the graalvm built provided executables 
+from [releases](https://github.com/kongeor/taty/releases).
 
 Running without params will start a REPL session:
 
